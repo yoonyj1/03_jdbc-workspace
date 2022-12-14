@@ -113,6 +113,8 @@ public class Homework {
 				conn.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
+			} catch (NullPointerException e) {
+				System.out.println();;
 			}
 		}
 
