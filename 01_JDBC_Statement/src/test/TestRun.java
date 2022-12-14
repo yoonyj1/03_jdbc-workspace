@@ -1,6 +1,7 @@
 package test;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -126,12 +127,31 @@ public class TestRun {
 			// 4), 5) SQL문 전달해서 실행 후 결과 받기(ResultSet 객체)
 			rset = stmt.executeQuery(sql);
 			
+			// rset.next(): 커서를 움직이는 메소드 boolean: 다음 것이 있으면 true, 없으면 false
+			
+			// 6) 
+			while(rset.next()) {
+				int tno = rset.getInt("TNO");
+				String tname = rset.getString("TNAME");
+				Date tdate = rset.getDate("TDATE");
+				
+				System.out.println(tno + ", " + tname + ", " + tdate);
+			}
 			
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} finally {
+			try {
+				rset.close();
+				stmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
+		
 	} // main 끝
 
 } // 클래스 끝
