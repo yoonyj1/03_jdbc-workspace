@@ -29,6 +29,7 @@ public class TestRun {
 		 *  6-2) 트랜젝션 처리(성공적으로 수행했으면 COMMIT, 실패 시 ROLLBACK)
 		 *  7) 다 사용한 JDBC 객체 반드시 반납 => 안할 시 락 걸림 (close) => 생성 된 역순으로 반납  
 		 */
+		
 		/*
 		// 1. 각자 PC(localhost)에 JDBC계정 연결 한 후 TEST테이블에 INSERT 해보기
 		// INSERT => 처리된 행 수(int) => 트랜젝션 처리
