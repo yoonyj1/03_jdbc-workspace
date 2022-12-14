@@ -23,15 +23,7 @@ public class ProductMenu {
 	String sql = null;
 	
 	public void mainMenu() {
-		try {
-			// java driver 등록
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-
-			// Connection 객체 생성
-			conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "JDBC", "JDBC");
-
-			// Statement 객체 생성
-			stmt = conn.createStatement();
+		pc.mainMenu();
 
 			// 반복문 실행
 			while (true) {
