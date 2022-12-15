@@ -13,12 +13,18 @@ public class Homework {
 	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
 		// 변수 셋팅
+		// 객체
 		Connection conn = null;
 		Statement stmt = null;
 		ResultSet rset = null;
+		
+		// 일반변수
 		int result = 0;
 		int price = 0;
 		String sql = null;
+		String type = null;
+		String pname = null;
+		boolean dml = true;
 
 		try {
 			// java driver 등록
@@ -43,63 +49,63 @@ public class Homework {
 
 				switch (menu) {
 				case 1: // SELECT
+					dml = false;
 					sql = "SELECT * FROM PRODUCT ORDER BY PNO";
 
 					rset = stmt.executeQuery(sql);
 					System.out.println("==================== 조회 결과 ======================");
-					while (rset.next()) {
-						int pno = rset.getInt("PNO");
-						String pname = rset.getString("PNAME");
-						price = rset.getInt("PRICE");
-						Date regDate = rset.getDate("REG_DATE");
-
-						System.out.println(pno + ", " + pname + ", " + price + ", " + regDate);
-					}
 					break;
 
 				case 2: // INSERT
+					dml = true;
+					type = "INSERT";
 					System.out.print("제품이름: ");
-					String pName = sc.nextLine();
+					pname = sc.nextLine();
 
 					System.out.print("가격: ");
 					price = sc.nextInt();
 					sc.nextLine();
 
-					sql = "INSERT INTO PRODUCT VALUES(SEQ_PNO.NEXTVAL, " + "'" + pName + "'" + ", " + price
+					sql = "INSERT INTO PRODUCT VALUES(SEQ_PNO.NEXTVAL, " + "'" + pname + "'" + ", " + price
 							+ ", " + "DEFAULT" + ")";
-
-					result = stmt.executeUpdate(sql);
-
-					if (result > 0) {
-						conn.commit();
-						System.out.println("입력 완료");
-					} else {
-						conn.rollback();
-						System.out.println("입력 실패. 다시 한번 확인하세요");
-					}
 					break;
 
 				case 3: // DELETE
-					System.out.print("삭제할 물품번호: ");
-					int delNum = sc.nextInt();
-					sc.nextLine();
+					dml = true;
+					type = "DELETE";
+					System.out.print("삭제할 물품: ");
+					pname = sc.nextLine();
+					
 
-					sql = "DELETE FROM PRODUCT WHERE PNO = " + delNum;
-
-					result = stmt.executeUpdate(sql);
-					if (result > 0) {
-						conn.commit();
-						System.out.println("삭제 완료");
-					} else {
-						conn.rollback();
-						System.out.println("삭제 실패. 다시 한번 확인하세요");
-					}
+					sql = "DELETE FROM PRODUCT WHERE PNAME LIKE '%" + pname + "%'";
 					break;
 
 				case 4:
 					System.out.println("프로그램을 종료합니다.");
 					sc.close();
 					return;
+					
+				}
+				if(dml) {
+					result = stmt.executeUpdate(sql);
+					
+					if (result > 0) {
+						conn.commit();
+						System.out.println(type +" 완료");
+					} else {
+						conn.rollback();
+						System.out.println(type + " 실패. 다시 한번 확인하세요");
+					}
+				} else {
+					rset = stmt.executeQuery(sql);
+					while (rset.next()) {
+						int pno = rset.getInt("PNO");
+						pname = rset.getString("PNAME");
+						price = rset.getInt("PRICE");
+						Date regDate = rset.getDate("REG_DATE");
+
+						System.out.println(pno + ", " + pname + ", " + price + ", " + regDate);
+					}
 				}
 			}
 
