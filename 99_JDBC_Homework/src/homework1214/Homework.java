@@ -98,6 +98,7 @@ public class Homework {
 					}
 				} else {
 					rset = stmt.executeQuery(sql);
+					
 					while (rset.next()) {
 						int pno = rset.getInt("PNO");
 						pname = rset.getString("PNAME");

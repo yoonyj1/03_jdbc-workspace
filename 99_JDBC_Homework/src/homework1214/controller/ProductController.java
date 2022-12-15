@@ -7,43 +7,36 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class ProductController {
-
+	// 변수 셋팅
+	// 객체
 	Connection conn = null;
 	Statement stmt = null;
 	ResultSet rset = null;
+	
+	// 일반변수
 	int result = 0;
 	int price = 0;
 	String sql = null;
+	String type = null;
+	String pname = null;
+	boolean dml = true;
 	
-	public void mainMenu() {
+	public void select() {
 		try {
-			// java driver 등록
 			Class.forName("oracle.jdbc.driver.OracleDriver");
-
-			// Connection 객체 생성
-			conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "JDBC", "JDBC");
-
-			// Statement 객체 생성
+			
+			conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe");
+			
 			stmt = conn.createStatement();
+			
+			sql = "SELECT * FROM PRODUCT ORDER BY PNO"; 
+			
+			rset = stmt.executeQuery(sql);
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
 			e.printStackTrace();
-		} finally { // 객체 반납
-			try {
-				rset.close();
-				stmt.close();
-				conn.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
 		}
+		
 	}
-	
-//	public int insertMenu(String pName, int price) {
-//		sql = "INSERT INTO PRODUCT VALUES(SEQ_PNO.NEXTVAL, " + "'" + pName + "'" + ", " + price
-//				+ ", " + "DEFAULT" + ")";
-//		
-//		return 
-//	}
 }

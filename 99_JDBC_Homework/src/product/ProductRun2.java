@@ -37,25 +37,25 @@ public class ProductRun2 {
 		int price = 0;
 		boolean dml = true;
 
-		while (true) { // while 시작
+		try {
+			Class.forName("oracle.jdbc.driver.OracleDriver");
 
-			// 메뉴 출력 및 선택
-			System.out.println("JDBC 메뉴");
-			System.out.println("1. SELECT 조회");
-			System.out.println("2. INSERT 추가");
-			System.out.println("3. DELETE 삭제");
-			System.out.println("4. 종료");
+			conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "JDBC", "JDBC");
 
-			System.out.print("메뉴선택: ");
-			int menu = sc.nextInt();
-			sc.nextLine(); // 버퍼에 남아있는 엔터 제거
+			stmt = conn.createStatement();
+			
+			while (true) { // while 시작
 
-			try {
-				Class.forName("oracle.jdbc.driver.OracleDriver");
+				// 메뉴 출력 및 선택
+				System.out.println("JDBC 메뉴");
+				System.out.println("1. SELECT 조회");
+				System.out.println("2. INSERT 추가");
+				System.out.println("3. DELETE 삭제");
+				System.out.println("4. 종료");
 
-				conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "JDBC", "JDBC");
-
-				stmt = conn.createStatement();
+				System.out.print("메뉴선택: ");
+				int menu = sc.nextInt();
+				sc.nextLine(); // 버퍼에 남아있는 엔터 제거
 
 				if (menu == 1) { // SELECT
 					dml = false;
@@ -113,23 +113,22 @@ public class ProductRun2 {
 					}
 				}
 
-			} catch (ClassNotFoundException e1) {
-				e1.printStackTrace();
+			} // while 끝
+		} catch (ClassNotFoundException e1) {
+			e1.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				rset.close();
+				stmt.close();
+				conn.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
-			} finally {
-				try {
-					rset.close();
-					stmt.close();
-					conn.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				} catch (NullPointerException e) {
-					e.printStackTrace();
-				}
+			} catch (NullPointerException e) {
+				e.printStackTrace();
 			}
-
-		} // while 끝
+		}
 
 	} // main 끝
 
