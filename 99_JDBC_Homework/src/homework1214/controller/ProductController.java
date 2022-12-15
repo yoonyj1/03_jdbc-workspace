@@ -1,6 +1,7 @@
 package homework1214.controller;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -32,6 +33,13 @@ public class ProductController {
 			sql = "SELECT * FROM PRODUCT ORDER BY PNO"; 
 			
 			rset = stmt.executeQuery(sql);
+			
+			while (rset.next()) {
+				int pno = rset.getInt("PNO");
+				pname = rset.getString("PNAME");
+				price = rset.getInt("PRICE");
+				Date regDate = rset.getDate("REG_DATE");
+			}
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {

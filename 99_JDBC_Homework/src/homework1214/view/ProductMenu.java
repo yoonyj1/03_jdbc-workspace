@@ -47,6 +47,8 @@ public class ProductMenu {
 	}
 	public void select() {
 		System.out.println("==================== 조회 결과 ======================");
+		pc.select();
+		System.out.println(pno + ", " + pname + ", " + price + ", " + regDate);
 	}
 
 } // 클래스 끝
