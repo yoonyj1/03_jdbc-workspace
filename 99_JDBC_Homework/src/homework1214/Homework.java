@@ -98,6 +98,7 @@ public class Homework {
 
 				case 4:
 					System.out.println("프로그램을 종료합니다.");
+					sc.close();
 					return;
 				}
 			}
@@ -114,7 +115,7 @@ public class Homework {
 			} catch (SQLException e) {
 				e.printStackTrace();
 			} catch (NullPointerException e) {
-				System.out.println();;
+				System.out.println();
 			}
 		}
 

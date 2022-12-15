@@ -40,10 +40,10 @@ public class ProductController {
 		}
 	}
 	
-	public int insertMenu(String pName, int price) {
-		sql = "INSERT INTO PRODUCT VALUES(SEQ_PNO.NEXTVAL, " + "'" + pName + "'" + ", " + price
-				+ ", " + "DEFAULT" + ")";
-		
-		return 
-	}
+//	public int insertMenu(String pName, int price) {
+//		sql = "INSERT INTO PRODUCT VALUES(SEQ_PNO.NEXTVAL, " + "'" + pName + "'" + ", " + price
+//				+ ", " + "DEFAULT" + ")";
+//		
+//		return 
+//	}
 }
