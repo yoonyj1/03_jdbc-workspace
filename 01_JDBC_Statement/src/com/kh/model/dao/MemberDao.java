@@ -2,8 +2,10 @@ package com.kh.model.dao;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 import com.kh.model.vo.Member;
 
@@ -95,4 +97,68 @@ public class MemberDao {
 		return result;
 	} // insertMember end
 	
+	public ArrayList<Member> selectList() {
+		// select문 -> 여러 행 조회 => ResultSet 객체 => ArrayList에 담기
+		// 필요한 변수 셋팅
+		ArrayList<Member> list = new ArrayList<Member>(); // 현재 상태는 텅 비어있는 상태
+		
+		Connection conn = null;
+		Statement stmt = null;
+		ResultSet rset = null; // select문 실행 시 조회된 결과값들이 최초로 담기는 객체
+		
+		// 실행할 sql문
+		String sql = "SELECT * FROM MEMBER";
+		
+		try {
+			// 1) jdbc driver 등록
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+			
+			// 2) Connection 생성
+			conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "JDBC", "JDBC");
+			
+			// 3) Statement 생성
+			stmt = conn.createStatement();
+			
+			// 4)5) 실행 / 결과받기
+			rset = stmt.executeQuery(sql);
+			
+			// 6) ResultSet으로부터 데이터 하나씩 뽑아서 vo객체에 담고 list에 vo 객체 추가
+			while(rset.next()) {
+				// 현재 rset의 커서가 가리키고 있는 한 행의 데이터를 싹 뽑아서 Member 객체에 담기
+				Member m = new Member();
+				
+				m.setUserNo(rset.getInt("USERNO"));
+				m.setUserId(rset.getString("USERID"));
+				m.setUserPwd(rset.getString("userpwd"));
+				m.setUserName(rset.getString("username"));
+				m.setGender(rset.getString("GENDER"));
+				m.setAge(rset.getInt("AGE"));
+				m.setEmail(rset.getString("EMAIL"));
+				m.setPhone(rset.getString("PHONE"));
+				m.setAddress(rset.getString("ADDRESS"));
+				m.setHobby(rset.getString("HOBBY"));
+				m.setEnrollDate(rset.getDate("ENROLLDATE"));
+				
+				list.add(m); // 리스트에 해당 회원 객체 담기
+			}
+			
+			// 반복문이 다 끝난 시점에 
+			// 만약에 조회된 데이터가 없었다면 list가 빈 상태
+			// 만약 조회된 데이터가 있다면 list에 담긴 상태
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+			// 7) 자원 반납
+				rset.close();
+				stmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return list;
+	}
 } // class end

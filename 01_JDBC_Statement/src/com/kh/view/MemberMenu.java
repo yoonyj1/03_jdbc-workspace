@@ -1,8 +1,10 @@
 package com.kh.view;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import com.kh.controller.MemberController;
+import com.kh.model.vo.Member;
 
 // View: 사용자가 보게 될 시각적인 요소(화면) 출력 및 입력
 public class MemberMenu {
@@ -26,7 +28,7 @@ public class MemberMenu {
 			System.out.println("│   4. 회원 이름으로 키워드 검색   	│");
 			System.out.println("│   5. 회원 정보 변경      		│");
 			System.out.println("│   6. 회원탈퇴      		│");
-			System.out.println("│   0. 프로그램 종료     		│");
+			System.out.println("│   0. 프로그램 종료     	  	│");
 			System.out.println("└───────────────────────────────┘");
 			System.out.print(">> 메뉴 선택 : ");
 			int menu = sc.nextInt();
@@ -38,6 +40,7 @@ public class MemberMenu {
 				break;
 
 			case 2:
+				mc.selectList(); // 입력받을 것 없으면 바로 Controller 호출
 				break;
 
 			case 3:
@@ -119,5 +122,30 @@ public class MemberMenu {
 	 */
 	public void displayFail(String message) {
 		System.out.println("\n 서비스 요청 실패: " + message);
+	}
+	
+	/**
+	 * 조회 서비스 요청 시 조회 결과가 없을 경우 보게되는 화면
+	 * @param message
+	 */
+	public void displayNoData(String message) {
+		System.out.println("\n 서비스 요청 실패: " + message);
+	}
+	
+	/**
+	 * 조회 서비스 성공 일 경우 보게되는 화면
+	 * @param list
+	 */
+	public void displayMemberList(ArrayList<Member> list) {
+		System.out.println("\n 조회된 데이터는 다음과 같습니다.");
+		// 단순 for 문
+		// for (int i = 0; i < list.size() - 1; i++) {
+		// System.out.println(list.get(i));
+		// }
+		
+		// 향상 된 for 문
+		for (Member m : list) {
+			System.out.println(m);
+		}
 	}
 }// class end
