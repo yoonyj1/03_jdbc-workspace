@@ -2,6 +2,7 @@ package com.kh.controller;
 
 import com.kh.model.dao.MemberDao;
 import com.kh.model.vo.Member;
+import com.kh.view.MemberMenu;
 
 /*
  *  Controller: View를 통해서 사용자가 요청한 기능에 대해서 처리하는 담당
@@ -29,6 +30,13 @@ public class MemberController {
 		// String -> int로 변경하는 방법 => parseInt();
 		
 		// new부터 빨간줄이 뜨는 경우 => 999999999% 확률로 그 데이터 타입을 받는 매개변수 생성자가 없다는 것임
-		new MemberDao().insertMember(m);
+		int result = new MemberDao().insertMember(m);
+		
+		// 팝업창 뜨는 거 마냥 사용자에게 문구 보여주기
+		if (result > 0) { // 성공
+			new MemberMenu().displaySuccess("성공적으로 회원 추가되었습니다.");
+		} else { // 실패
+			new MemberMenu().displayFail("회원추가 실패했습니다.");
+		}
 	}
 }

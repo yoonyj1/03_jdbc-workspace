@@ -21,7 +21,7 @@ public class MemberMenu {
 			System.out.println("\n   == 회원관리 프로그램 ==");
 			System.out.println("┌───────────────────────────────┐");
 			System.out.println("│   1. 회원 추가      		│");
-			System.out.println("│   2. 회원전체조회      		│");
+			System.out.println("│   2. 회원 전체 조회      		│");
 			System.out.println("│   3. 회원 아이디 검색      	│");
 			System.out.println("│   4. 회원 이름으로 키워드 검색   	│");
 			System.out.println("│   5. 회원 정보 변경      		│");
@@ -103,5 +103,21 @@ public class MemberMenu {
 		mc.insertMember(userId, userPwd, userName, gender, age, email, phone, address, hobby);
 
 	}
+	
+	//-------------------------------------- 응답화면 -----------------------------------------
+	/**
+	 * 서비스 요청 처리 후 성공했을 경우 사용자가 보게 될 응답화면
+	 * @param message
+	 */
+	public void displaySuccess(String message) {
+		System.out.println("\n 서비스 요청 성공: " + message);
+	}
 
+	/**
+	 * 서비스 요청 실패 후 사용자가 보게되는 화면
+	 * @param message
+	 */
+	public void displayFail(String message) {
+		System.out.println("\n 서비스 요청 실패: " + message);
+	}
 }// class end

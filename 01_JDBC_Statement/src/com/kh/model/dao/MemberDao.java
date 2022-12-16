@@ -31,6 +31,11 @@ public class MemberDao {
 	 *  7) 다 사용한 JDBC 객체 반드시 반납 => 안할 시 락 걸림 (close) => 생성 된 역순으로 반납  
 	 */
 	
+	/**
+	 * 사용자가 입력한 정보들을 추가시켜주는 메소드
+	 * @param m: 사용자가 입력한 값들이 담겨있는 Member 객체
+	 * @return: INSERT문 수행 후 처리된 행 수
+	 */
 	public int insertMember(Member m) {
 		// insert문 -> 처리된 행 수 return(int) -> 트랜잭션 처리
 		
