@@ -54,7 +54,23 @@ public class MemberController {
 		} else {
 			new MemberMenu().displayMemberList(list);
 		}
+	}
+	
+	/**
+	 * 이름으로 회원 정보를 조회요청을 처리해주는 메소드
+	 * @param userName
+	 */
+	public void selectNameInfo(String userName) {
+		Member m = new Member();
 		
+		// m.setUserName(userName);
 		
+		ArrayList<Member> list = new MemberDao().selectNameInfo(userName);
+		
+		if (list.isEmpty()) {
+			new MemberMenu().displayNoData("조회 결과가 없습니다.");
+		} else {
+			new MemberMenu().displayMemberList(list);
+		}
 	}
 } // class end

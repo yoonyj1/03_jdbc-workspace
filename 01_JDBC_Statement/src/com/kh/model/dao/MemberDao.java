@@ -161,4 +161,60 @@ public class MemberDao {
 		}
 		return list;
 	}
+	
+	/**
+	 * 사용자가 입력한 이름으로 회원정보를 검색해주는 메소드
+	 * @param userName
+	 * @return
+	 */
+	public ArrayList<Member> selectNameInfo(String userName) {
+		ArrayList<Member> list = new ArrayList<Member>();
+		
+		String sql = "SELECT * FROM MEMBER WHERE USERNAME = '" + userName + "'";
+		
+		Connection conn = null;
+		Statement stmt = null;
+		ResultSet rset = null;
+		
+		try {
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+			
+			conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "JDBC", "JDBC");
+			
+			stmt = conn.createStatement();
+			
+			rset = stmt.executeQuery(sql);
+			
+			while (rset.next()) {
+				Member m = new Member();
+				
+				m.setUserNo(rset.getInt("USERNO"));
+				m.setUserId(rset.getString("USERID"));
+				m.setUserPwd(rset.getString("userpwd"));
+				m.setUserName(rset.getString("username"));
+				m.setGender(rset.getString("GENDER"));
+				m.setAge(rset.getInt("AGE"));
+				m.setEmail(rset.getString("EMAIL"));
+				m.setPhone(rset.getString("PHONE"));
+				m.setAddress(rset.getString("ADDRESS"));
+				m.setHobby(rset.getString("HOBBY"));
+				m.setEnrollDate(rset.getDate("ENROLLDATE"));
+				
+				list.add(m);
+			}
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				rset.close();
+				stmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return list;
+	}
 } // class end

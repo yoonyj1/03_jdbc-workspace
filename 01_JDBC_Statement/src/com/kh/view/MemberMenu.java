@@ -28,6 +28,7 @@ public class MemberMenu {
 			System.out.println("│   4. 회원 이름으로 키워드 검색   	│");
 			System.out.println("│   5. 회원 정보 변경      		│");
 			System.out.println("│   6. 회원탈퇴      		│");
+			System.out.println("│   9. 이름으로 정보 조회    		│");
 			System.out.println("│   0. 프로그램 종료     	  	│");
 			System.out.println("└───────────────────────────────┘");
 			System.out.print(">> 메뉴 선택 : ");
@@ -53,6 +54,10 @@ public class MemberMenu {
 				break;
 
 			case 6:
+				break;
+				
+			case 9:
+				selectNameInfo();
 				break;
 
 			case 0:
@@ -107,6 +112,16 @@ public class MemberMenu {
 
 	}
 	
+	/**
+	 * 9. 이름으로 정보 검색하는 화면
+	 */
+	public void selectNameInfo() {
+		System.out.print("이름 입력: ");
+		String userName = sc.nextLine();
+		
+		mc.selectNameInfo(userName);
+	}
+	
 	//-------------------------------------- 응답화면 -----------------------------------------
 	/**
 	 * 서비스 요청 처리 후 성공했을 경우 사용자가 보게 될 응답화면
@@ -148,4 +163,5 @@ public class MemberMenu {
 			System.out.println(m);
 		}
 	}
+	
 }// class end
