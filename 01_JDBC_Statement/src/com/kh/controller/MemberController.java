@@ -61,10 +61,6 @@ public class MemberController {
 	 * @param userName
 	 */
 	public void selectNameInfo(String userName) {
-		Member m = new Member();
-		
-		// m.setUserName(userName);
-		
 		ArrayList<Member> list = new MemberDao().selectNameInfo(userName);
 		
 		if (list.isEmpty()) {
