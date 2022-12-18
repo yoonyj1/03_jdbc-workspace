@@ -23,6 +23,18 @@ public class Member {
 		this.point = point;
 	}
 
+	public Member(String memId, String nickname, int point) {
+		super();
+		this.memId = memId;
+		this.nickname = nickname;
+		this.point = point;
+	}
+
+	
+	public Member(String memId) {
+		super();
+		this.memId = memId;
+	}
 
 	public Member(String memId, String grade, String nickname, Date signUpDate, int point) {
 		super();
@@ -32,6 +44,8 @@ public class Member {
 		this.signUpDate = signUpDate;
 		this.point = point;
 	}
+
+	
 
 	// 메소드부
 	public String getMemId() {
@@ -76,7 +90,7 @@ public class Member {
 
 	@Override
 	public String toString() {
-		return memId + ", " + grade + ", " + nickname + ", " + signUpDate + ", " + point;
+		return memId+ "\t" + grade + "\t" + nickname + "\t" + signUpDate + "\t" + point;
 	}
 	
 	

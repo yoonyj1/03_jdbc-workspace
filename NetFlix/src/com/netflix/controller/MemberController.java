@@ -10,25 +10,39 @@ import com.netflix.model.vo.Member;
 import com.netflix.view.MemberMenu;
 
 public class MemberController {
+	
+	String type = null;
+	int result = 0;
+	Member m = new Member();
+	ArrayList<Member> list = null;
 
 	public void insertMenu(int menu, String memId, String nickname, String signUpDate, String point) {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyMMdd");
-		Date signUpDate2 = null;
+		 // 951022
+		 // 012345
+		String sudYear = "20" + signUpDate.substring(0, 2); // 2022
+		String sudMonth = signUpDate.substring(2, 4); // 12
+		String sudDay = signUpDate.substring(4); // 18
 		
-		try {
-			signUpDate2 = (Date) sdf.parse(signUpDate);
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
+		java.util.Date date = new java.util.Date();
 		
-		Member m = new Member(memId, nickname, signUpDate2, Integer.parseInt(point));
-		int result = 0;
+		signUpDate = sudYear + "-" + sudMonth + "-" + sudDay;  //2022-12-18
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		
+		signUpDate = sdf.format(date);
+		
+		Date date1 = Date.valueOf(signUpDate);
+		
+		m = new Member(memId, nickname, date1, Integer.parseInt(point));
+		
+		result = 0;
+		type = "추가";
 		
 		if (menu == 1) {
 			m.setGrade("Basic");
 			result = new MemberDao().insertMenu(m);
 		} else if (menu == 2) {
-			m.setGrade("Standard");
+			m.setGrade("Stand");
 			result = new MemberDao().insertMenu(m);
 		} else if (menu == 3) {
 			m.setGrade("Premium");
@@ -36,16 +50,60 @@ public class MemberController {
 		}
 		
 		if (result > 0) {
-			new MemberMenu().displaySuccess("회원추가 성공");
+			new MemberMenu().displaySuccess("회원 " + type + " 성공");
 		} else {
-			new MemberMenu().displayFail("회원추가 실패");
+			new MemberMenu().displayFail("회원 " + type + " 실패");
 		}
 	
 	} // insertMenu end
 	
 	public void selectMenu() {
-		ArrayList<Member> list = new MemberDao().selectMenu();
+		list = new MemberDao().selectMenu();
 		
+		if(list.isEmpty()) {
+			new MemberMenu().displayNoData("조회결과 없음");
+		} else {
+			new MemberMenu().displayMember(list);
+		}
 		
-	}
+	} // selectMenu end
+	
+	public void selectInfo(int menu, String info) {
+		list = new MemberDao().selectMenu(menu, info);
+		
+		if(list.isEmpty()) {
+			new MemberMenu().displayNoData("조회결과 없음");
+		} else {
+			new MemberMenu().displayMember(list);
+		}
+	} // selectInfo end
+	
+	public void updateMenu(String memId, String nickname, String point) {
+		type = "수정";
+		
+		m = new Member(memId, nickname, Integer.parseInt(point));
+		
+		result = new MemberDao().updateMenu(m);
+		
+		if (result > 0) {
+			new MemberMenu().displaySuccess("회원 정보 " + type + " 성공");
+		} else {
+			new MemberMenu().displayFail("회원 정보 " + type + " 실패");
+		}
+	} // updateMenu end
+	
+	public void deleteMenu(String memId) {
+		type = "삭제";
+		
+		m = new Member(memId);
+		
+		result = new MemberDao().deleteMenu(m);
+		
+		if (result > 0) {
+			new MemberMenu().displaySuccess("회원 정보 " + type + " 성공");
+		} else {
+			new MemberMenu().displayFail("회원 정보 " + type + " 실패");
+		}
+	} // deleteMenu end
+	
 } // class end
