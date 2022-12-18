@@ -13,6 +13,7 @@ public class MemberController {
 	
 	String type = null;
 	int result = 0;
+	boolean dml = true;
 	
 	Member m = new Member();
 	ArrayList<Member> list = null;
@@ -26,6 +27,9 @@ public class MemberController {
 	 * @param point
 	 */
 	public void insertMenu(int menu, String memId, String nickname, String signUpDate, String point) {
+		type = "추가";
+		dml = true;
+		
 		String sudYear = "20" + signUpDate.substring(0, 2); // 2022
 		String sudMonth = signUpDate.substring(2, 4); // 12
 		String sudDay = signUpDate.substring(4); // 18
@@ -47,24 +51,18 @@ public class MemberController {
 
 		m = new Member(memId, nickname, date1, Integer.parseInt(point));
 		
-		type = "추가";
-		
 		if (menu == 1) {
 			m.setGrade("Basic");
-			result = new MemberDao().insertMenu(m);
+			result = new MemberDao().dml(type, m);
 		} else if (menu == 2) {
 			m.setGrade("Stand");
-			result = new MemberDao().insertMenu(m);
+			result = new MemberDao().dml(type, m);
 		} else if (menu == 3) {
 			m.setGrade("Premium");
-			result = new MemberDao().insertMenu(m);
+			result = new MemberDao().dml(type, m);
 		}
 		
-		if (result > 0) {
-			new MemberMenu().displaySuccess("회원 " + type + " 성공");
-		} else {
-			new MemberMenu().displayFail("회원 " + type + " 실패");
-		}
+		dml(type);
 	
 	} // insertMenu end
 	
@@ -72,6 +70,8 @@ public class MemberController {
 	 * 2. Select를 실행하는 메소드
 	 */
 	public void selectMenu() {
+		dml = false;
+		
 		list = new MemberDao().selectMenu();
 		
 		if(list.isEmpty()) {
@@ -88,6 +88,8 @@ public class MemberController {
 	 * @param info
 	 */
 	public void selectInfo(int menu, String info) {
+		dml = false;
+		
 		list = new MemberDao().selectMenu(menu, info);
 		
 		if(list.isEmpty()) {
@@ -104,17 +106,14 @@ public class MemberController {
 	 * @param point
 	 */
 	public void updateMenu(String memId, String nickname, String point) {
+		dml = true;
 		type = "수정";
 		
 		m = new Member(memId, nickname, Integer.parseInt(point));
 		
-		result = new MemberDao().updateMenu(m);
+		result = new MemberDao().dml(type, m);
 		
-		if (result > 0) {
-			new MemberMenu().displaySuccess("회원 정보 " + type + " 성공");
-		} else {
-			new MemberMenu().displayFail("회원 정보 " + type + " 실패");
-		}
+		dml(type);
 	} // updateMenu end
 	
 	/**
@@ -122,17 +121,34 @@ public class MemberController {
 	 * @param memId
 	 */
 	public void deleteMenu(String memId) {
+		dml = true;
 		type = "삭제";
 		
 		m = new Member(memId);
 		
-		result = new MemberDao().deleteMenu(m);
+		result = new MemberDao().dml(type, m);
 		
-		if (result > 0) {
-			new MemberMenu().displaySuccess("회원 정보 " + type + " 성공");
-		} else {
-			new MemberMenu().displayFail("회원 정보 " + type + " 실패");
-		}
+		dml(type);
 	} // deleteMenu end
+	
+	/**
+	 * DML문의 처리결과를 나타내는 메소드
+	 * @param type
+	 */
+	public void dml(String type) {
+		if (type.equals("추가")) {
+			if (result > 0) {
+				new MemberMenu().displaySuccess("회원 " + type + " 성공");
+			} else {
+				new MemberMenu().displayFail("회원 " + type + " 실패");
+			}
+		} else {
+			if (result > 0) {
+				new MemberMenu().displaySuccess("회원 정보 " + type + " 성공");
+			} else {
+				new MemberMenu().displayFail("회원 정보 " + type + " 실패");
+			}
+		}
+	}
 	
 } // class end

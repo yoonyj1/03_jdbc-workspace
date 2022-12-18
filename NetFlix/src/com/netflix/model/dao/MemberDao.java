@@ -11,61 +11,70 @@ import com.netflix.model.vo.Member;
 
 public class MemberDao {
 	String sql = null;
-	
+	String type = null;
+	boolean dml = true;
+
 	Connection conn = null;
 	Statement stmt = null;
 	ResultSet rset = null;
-	
+
 	Member m = new Member();
-	
+
 	int result = 0;
 
-	public int insertMenu(Member m) {
-
-		result = 0;
-
-		sql = "INSERT INTO MEMBER2 VALUES(" + "'" + m.getMemId() + "', "
-											+ "'" + m.getGrade() + "', " 
-											+ "'" + m.getNickname() + "', "
-											+ "'" + m.getSignUpDate() + "', " 
-											+ m.getPoint() + ")";
-
-		try {
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-
-			conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "JDBC", "JDBC");
-
-			stmt = conn.createStatement();
-
-			result = stmt.executeUpdate(sql);
-
-			if (result > 0) {
-				conn.commit();
-			} else {
-				conn.rollback();
-			}
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
+	/**
+	 * DML문을 처리하는 메소드
+	 * @param type
+	 * @param m
+	 * @return
+	 */
+	public int dml(String type, Member m) {
 			try {
-				stmt.close();
-				conn.close();
+				Class.forName("oracle.jdbc.driver.OracleDriver");
+
+				conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "JDBC", "JDBC");
+
+				stmt = conn.createStatement();
+				if (type.equals("추가")) {
+					sql = "INSERT INTO MEMBER2 VALUES(" + 
+											"'" + m.getMemId() + "', " 
+										  + "'" + m.getGrade() + "', " 
+										  + "'"	+ m.getNickname() + "', " 
+										  + "'" + m.getSignUpDate() + "', " 
+										  + m.getPoint() + ")";
+				} else if (type.equals("수정")) {
+					sql = "UPDATE MEMBER2 SET NICKNAME = '" + m.getNickname() 
+										   + "', POINT = " + m.getPoint()
+										   + "WHERE MEMID = '" + m.getMemId() + "'";
+				} else if (type.equals("삭제")) {
+					sql = "DELETE FROM MEMBER2 WHERE MEMID = '" + m.getMemId() + "'";
+				}
+				result = stmt.executeUpdate(sql);
+
+				if (result > 0) {
+					conn.commit();
+				} else {
+					conn.rollback();
+				}
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
 			} catch (SQLException e) {
 				e.printStackTrace();
+			} finally {
+				try {
+					stmt.close();
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
 			}
-
-		}
-		return result;
-	} // insertMenu end
+			return result;
+		} 
 
 	public ArrayList<Member> selectMenu() {
 		ArrayList<Member> list = new ArrayList<>();
 
-		sql = "SELECT * "
-				+ "FROM MEMBER2 "
-				+ "ORDER BY DECODE(GRADE, 'Basic', 1, 'Stand', 2, 'Premium', 3)";
+		sql = "SELECT * " + "FROM MEMBER2 " + "ORDER BY DECODE(GRADE, 'Basic', 1, 'Stand', 2, 'Premium', 3)";
 
 		try {
 			Class.forName("oracle.jdbc.driver.OracleDriver");
@@ -88,7 +97,6 @@ public class MemberDao {
 				list.add(m);
 			}
 
-			return list;
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
@@ -105,7 +113,7 @@ public class MemberDao {
 		}
 
 		return list;
-	}
+	} // selectMenu end
 
 	public ArrayList<Member> selectMenu(int menu, String info) {
 		ArrayList<Member> list = new ArrayList<>();
@@ -137,7 +145,6 @@ public class MemberDao {
 				list.add(m);
 			}
 
-			return list;
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
@@ -152,78 +159,7 @@ public class MemberDao {
 			}
 
 		}
-
 		return list;
-	}
+	} // selectMenu end
 
-	public int updateMenu(Member m) {
-		sql = "UPDATE MEMBER2 SET NICKNAME = '" + m.getNickname() + "', POINT = " + m.getPoint() + "WHERE MEMID = '"
-				+ m.getMemId() + "'";
-
-		try {
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-
-			conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "JDBC", "JDBC");
-
-			stmt = conn.createStatement();
-
-			result = stmt.executeUpdate(sql);
-
-			if (result > 0) {
-				conn.commit();
-			} else {
-				conn.rollback();
-			}
-
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				stmt.close();
-				conn.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-
-		return result;
-	}
-
-	public int deleteMenu(Member m) {
-		sql = "DELETE FROM MEMBER2 WHERE MEMID = '" + m.getMemId() + "'";
-
-		try {
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-
-			conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "JDBC", "JDBC");
-
-			stmt = conn.createStatement();
-
-			result = stmt.executeUpdate(sql);
-
-			if (result > 0) {
-				conn.commit();
-			} else {
-				conn.rollback();
-			}
-
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				stmt.close();
-				conn.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-
-		}
-		
-		return result;
-	}
-}
-// class end
+} // class end
