@@ -192,7 +192,7 @@ public class MemberMenu {
 	 */
 	public void displayMember(ArrayList<Member> list) {
 		System.out.println("\n 조회 결과");
-		System.out.println("아이디\t등급\t닉네임\t가입일\t\t포인트");
+		System.out.println("ID\t등급\t닉네임\t가입일\t\t포인트");
 		for (Member m : list) {
 			System.out.println(m);
 		} // displayMember end

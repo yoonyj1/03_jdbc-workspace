@@ -17,14 +17,18 @@ public class MemberController {
 	Member m = new Member();
 	ArrayList<Member> list = null;
 
+	/**
+	 * 1. Insert를 처리하는 메소드
+	 * @param menu
+	 * @param memId
+	 * @param nickname
+	 * @param signUpDate
+	 * @param point
+	 */
 	public void insertMenu(int menu, String memId, String nickname, String signUpDate, String point) {
 		String sudYear = "20" + signUpDate.substring(0, 2); // 2022
 		String sudMonth = signUpDate.substring(2, 4); // 12
 		String sudDay = signUpDate.substring(4); // 18
-		
-		System.out.println(sudYear);
-		System.out.println(sudMonth);
-		System.out.println(sudDay);
 		
 		signUpDate = sudYear + "-" + sudMonth + "-" + sudDay;  //2022-12-18
 		
@@ -64,6 +68,9 @@ public class MemberController {
 	
 	} // insertMenu end
 	
+	/**
+	 * 2. Select를 실행하는 메소드
+	 */
 	public void selectMenu() {
 		list = new MemberDao().selectMenu();
 		
@@ -75,6 +82,11 @@ public class MemberController {
 		
 	} // selectMenu end
 	
+	/**
+	 * 3. Select를 ID 혹은 nickname으로 검색하는 메소드
+	 * @param menu
+	 * @param info
+	 */
 	public void selectInfo(int menu, String info) {
 		list = new MemberDao().selectMenu(menu, info);
 		
@@ -85,6 +97,12 @@ public class MemberController {
 		}
 	} // selectInfo end
 	
+	/**
+	 * 4. 업데이트 메소드
+	 * @param memId
+	 * @param nickname
+	 * @param point
+	 */
 	public void updateMenu(String memId, String nickname, String point) {
 		type = "수정";
 		
@@ -99,6 +117,10 @@ public class MemberController {
 		}
 	} // updateMenu end
 	
+	/**
+	 * 5. 삭제메소드
+	 * @param memId
+	 */
 	public void deleteMenu(String memId) {
 		type = "삭제";
 		

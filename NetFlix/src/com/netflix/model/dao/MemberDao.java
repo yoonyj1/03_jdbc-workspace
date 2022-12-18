@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import com.netflix.model.vo.Member;
 
 public class MemberDao {
-
 	String sql = null;
 	
 	Connection conn = null;
@@ -20,16 +19,17 @@ public class MemberDao {
 	Member m = new Member();
 	
 	int result = 0;
-	
 
 	public int insertMenu(Member m) {
 
 		result = 0;
 
-		sql = "INSERT INTO MEMBER2 VALUES(" + "'" + m.getMemId() + "', " + "'" + m.getGrade() + "', " + "'"
-				+ m.getNickname() + "', " + "'" + m.getSignUpDate() + "', " + m.getPoint() + ")";
+		sql = "INSERT INTO MEMBER2 VALUES(" + "'" + m.getMemId() + "', "
+											+ "'" + m.getGrade() + "', " 
+											+ "'" + m.getNickname() + "', "
+											+ "'" + m.getSignUpDate() + "', " 
+											+ m.getPoint() + ")";
 
-		System.out.println(m.getSignUpDate());
 		try {
 			Class.forName("oracle.jdbc.driver.OracleDriver");
 
@@ -63,7 +63,9 @@ public class MemberDao {
 	public ArrayList<Member> selectMenu() {
 		ArrayList<Member> list = new ArrayList<>();
 
-		sql = "SELECT * FROM MEMBER2 ORDER BY DECODE(GRADE, 'Basic', 1, 'Stand', 2, 'Premium', 3)";
+		sql = "SELECT * "
+				+ "FROM MEMBER2 "
+				+ "ORDER BY DECODE(GRADE, 'Basic', 1, 'Stand', 2, 'Premium', 3)";
 
 		try {
 			Class.forName("oracle.jdbc.driver.OracleDriver");
