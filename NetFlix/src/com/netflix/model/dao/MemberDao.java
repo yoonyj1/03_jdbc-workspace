@@ -29,6 +29,7 @@ public class MemberDao {
 		sql = "INSERT INTO MEMBER2 VALUES(" + "'" + m.getMemId() + "', " + "'" + m.getGrade() + "', " + "'"
 				+ m.getNickname() + "', " + "'" + m.getSignUpDate() + "', " + m.getPoint() + ")";
 
+		System.out.println(m.getSignUpDate());
 		try {
 			Class.forName("oracle.jdbc.driver.OracleDriver");
 
@@ -62,7 +63,7 @@ public class MemberDao {
 	public ArrayList<Member> selectMenu() {
 		ArrayList<Member> list = new ArrayList<>();
 
-		sql = "SELECT * FROM MEMBER2";
+		sql = "SELECT * FROM MEMBER2 ORDER BY DECODE(GRADE, 'Basic', 1, 'Stand', 2, 'Premium', 3)";
 
 		try {
 			Class.forName("oracle.jdbc.driver.OracleDriver");

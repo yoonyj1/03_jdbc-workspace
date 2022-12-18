@@ -13,29 +13,36 @@ public class MemberController {
 	
 	String type = null;
 	int result = 0;
+	
 	Member m = new Member();
 	ArrayList<Member> list = null;
 
 	public void insertMenu(int menu, String memId, String nickname, String signUpDate, String point) {
-		 // 951022
-		 // 012345
 		String sudYear = "20" + signUpDate.substring(0, 2); // 2022
 		String sudMonth = signUpDate.substring(2, 4); // 12
 		String sudDay = signUpDate.substring(4); // 18
 		
-		java.util.Date date = new java.util.Date();
+		System.out.println(sudYear);
+		System.out.println(sudMonth);
+		System.out.println(sudDay);
 		
 		signUpDate = sudYear + "-" + sudMonth + "-" + sudDay;  //2022-12-18
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+		java.util.Date date = null;
+		try {
+			date = sdf.parse(signUpDate);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
 		
 		signUpDate = sdf.format(date);
 		
 		Date date1 = Date.valueOf(signUpDate);
-		
+
 		m = new Member(memId, nickname, date1, Integer.parseInt(point));
 		
-		result = 0;
 		type = "추가";
 		
 		if (menu == 1) {
