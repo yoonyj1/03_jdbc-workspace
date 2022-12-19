@@ -55,6 +55,7 @@ public class MemberMenu {
 				break;
 
 			case 5:
+				updateMember();
 				break;
 
 			case 6:
@@ -133,6 +134,33 @@ public class MemberMenu {
 		return sc.nextLine();
 	}
 	
+	/**
+	 * 사용자에게 변경할 정보들(비밀번호, 이메일, 전화번호, 주소)과 해당 회원 아이디 입력받는 화면
+	 */
+	public void updateMember() {
+		System.out.println("\n===== 회원정보 변경 =====");
+		
+		// 비밀번호, 이메일, 전화번호, 주소, 아이디
+		/*
+		System.out.print("회원정보를 변경할 회원아이디 입력: ");
+		String userId = sc.nextLine();
+		*/
+		String userId = inputMemberId(); // 위의 두 줄을 다음과 같이 줄일 수 있음
+		
+		System.out.print("변경할 암호: ");
+		String userPwd = sc.nextLine();
+		
+		System.out.print("변경할 이메일: ");
+		String email = sc.nextLine();
+		
+		System.out.print("변경할 전화번호: ");
+		String phone = sc.nextLine();
+		
+		System.out.print("변경할 주소: ");
+		String address = sc.nextLine();
+		
+		mc.updateMember(userId, userPwd, email, phone, address);
+	}
 	/**
 	 * 9. 이름으로 정보 검색하는 화면
 	 */

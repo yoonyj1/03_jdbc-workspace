@@ -225,10 +225,15 @@ public class MemberDao {
 		return m;
 	}
 	
-	public ArrayList<Member> selectByUserName(String keyword) {
+	/**
+	 * 사용자의 이름으로 키워드 검색 요청 시 처리해주는 메소드
+	 * @param keyword
+	 * @return
+	 */
+	public ArrayList<Member> selectByUserName (String keyword) {
 		// SELECT문 수행(여러행) => ResultSet
 		// ArrayList로 짜야함
-		ArrayList<Member> list = null;
+		ArrayList<Member> list = new ArrayList<Member>();
 		
 		Connection conn = null;
 		Statement stmt = null;
@@ -246,20 +251,19 @@ public class MemberDao {
 			rset = stmt.executeQuery(sql);
 			
 			while (rset.next()) {
-				Member m = new Member(rset.getInt("USERNO"),
-						rset.getString("USERID"),
-						rset.getString("USERPWD"),
-						rset.getString("USERNAME"),
-						rset.getString("GENDER"),
-						rset.getInt("AGE"),
-						rset.getString("EMAIL"),
-						rset.getString("PHONE"),
-						rset.getString("ADDRESS"),
-						rset.getString("HOBBY"),
-						rset.getDate("ENROLLDATE")
-						);
-				
-				list.add(m);
+				list.add(new Member(
+						rset.getInt("userNo"),
+						rset.getString("userId"),
+						rset.getString("userPwd"),
+						rset.getString("userName"),
+						rset.getString("gender"),
+						rset.getInt("age"),
+						rset.getString("email"),
+						rset.getString("phone"),
+						rset.getString("address"),
+						rset.getString("hobby"),
+						rset.getDate("enrollDate")
+						));
 			}
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
@@ -276,6 +280,52 @@ public class MemberDao {
 			
 		}
 		return list;
+	}
+	
+	public int updateMember(Member m) {
+		// update문 => 처리된 행 수 (int) -> 트랜잭션 처리
+		
+		int result = 0;
+		
+		Connection conn = null;
+		Statement stmt = null;
+		
+		String sql = "UPDATE MEMBER "
+					+ "SET USERPWD = '" + m.getUserPwd() + "'"
+						+ ", EMAIL = '" + m.getEmail() + "'"
+						+ ", PHONE = '" + m.getPhone() + "'"
+						+ ", ADDRESS = '" + m.getAddress() + "'"
+					+ "WHERE USERID = '" + m.getUserId() + "'";
+									
+				
+		try {
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+			
+			conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "JDBC", "JDBC");
+			
+			stmt = conn.createStatement();
+			
+			result = stmt.executeUpdate(sql);
+			
+			if (result > 0) {
+				conn.commit();
+			} else {
+				conn.rollback();
+			}
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				stmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return result;
 	}
 	
 	/**

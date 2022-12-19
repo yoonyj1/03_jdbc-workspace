@@ -67,11 +67,35 @@ public class MemberController {
 	} // selectByUserId end
 	
 	/**
-	 * 
+	 * 사용자의 이름으로 키워드 검색 요청 시 처리해주는 메소드
 	 * @param keyword: 사용자에게 입력받은 키워드
 	 */
 	public void selectByUserName(String keyword) {
-		new MemberDao().selectByUserName(keyword);
+		ArrayList<Member> list = new MemberDao().selectByUserName(keyword);
+		
+		if(list.isEmpty()) { // 텅 빈 리스트일 경우 => 검색결과 없음
+			new MemberMenu().displayNoData(keyword + "에 해당하는 결과가 없습니다."); 
+		} else { 
+			new MemberMenu().displayMemberList(list);
+		}
+	}
+	
+	public void updateMember(String userId, String userPwd, String email, String phone, String address) {
+		Member m = new Member();
+		
+		m.setUserId(userId);
+		m.setUserPwd(userPwd);
+		m.setEmail(email);
+		m.setPhone(phone);
+		m.setAddress(address);
+		
+		int result = new MemberDao().updateMember(m);
+		
+		if (result > 0) {
+			new MemberMenu().displaySuccess("변경 성공");
+		} else {
+			new MemberMenu().displayFail("변경 실패");
+		}
 	}
 	
 	/**
