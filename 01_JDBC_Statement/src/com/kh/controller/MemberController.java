@@ -54,7 +54,11 @@ public class MemberController {
 		} else {
 			new MemberMenu().displayMemberList(list);
 		}
-	}
+	} // selectList end
+	
+	public void selectByUserId(String userId) {
+		new MemberDao().selectByUserId(userId);
+	} // selectByUserId end
 	
 	/**
 	 * 이름으로 회원 정보를 조회요청을 처리해주는 메소드
@@ -68,5 +72,6 @@ public class MemberController {
 		} else {
 			new MemberMenu().displayMemberList(list);
 		}
-	}
+	} // selectNameInfo end
+	
 } // class end

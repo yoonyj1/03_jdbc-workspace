@@ -45,6 +45,8 @@ public class MemberMenu {
 				break;
 
 			case 3:
+				String userId = inputMemberId();
+				mc.selectByUserId(userId);
 				break;
 
 			case 4:
@@ -78,7 +80,7 @@ public class MemberMenu {
 	 * 1. 회원 추가 화면(서브 화면) 추가하고자 하는 회원의 정보를 입력받아서 회원 추가 요청하는 창
 	 */
 	public void inputMember() {
-		System.out.println("\n === 회원 추가 ===");
+		System.out.println("\n=== 회원 추가 ===");
 
 		System.out.print("아이디: ");
 		String userId = sc.nextLine();
@@ -112,6 +114,13 @@ public class MemberMenu {
 
 	}
 	
+	/**
+	 * 3. 사용자에게 회원아이디를 입력 받은 후 입력 된 값을 반환시켜주는 메소드
+	 */
+	public String inputMemberId() {
+		System.out.print("\n회원 아이디 입력: ");
+		return sc.nextLine();
+	}
 	/**
 	 * 9. 이름으로 정보 검색하는 화면
 	 */

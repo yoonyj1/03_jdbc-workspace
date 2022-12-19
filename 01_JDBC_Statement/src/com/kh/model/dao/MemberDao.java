@@ -163,6 +163,71 @@ public class MemberDao {
 	}
 	
 	/**
+	 * 사용자가 입력한 아이디로 검색해주는 메소드
+	 * @param userId
+	 */
+	public void selectByUserId(String userId) {
+		// SELECT문 (한 행만 조회됨) => ResultSet 객체에 넣어야함
+		// ArrayList 필요없음 Member 객체 하나에 담으면 됨
+		Member m = null; // 조회 결과가 있을수도 있고 없을수도 있기 때문에
+		
+		// 필요한 변수들 셋팅
+		// JDBC 객체
+		Connection conn = null;
+		Statement stmt = null;
+		ResultSet rset = null;
+		
+		String sql = "SELECT * FROM MEMBER WHERE USERID = '" + userId + "'";
+		
+		try {
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+			
+			conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "JDBC", "JDBC");
+			
+			stmt = conn.createStatement();
+			
+			rset = stmt.executeQuery(sql);
+			
+			if (rset.next()) { // 한 행이라도 조회됐을 때
+				// 조회됐다면 해당 조회된 컬럼값들을 뽑아서 Member 객체의 각 필드에 담기
+				m = new Member(
+						rset.getInt("USERNO"),
+						rset.getString("USERID"),
+						rset.getString("USERPWD"),
+						rset.getString("USERNAME"),
+						rset.getString("GENDER"),
+						rset.getInt("AGE"),
+						rset.getString("EMAIL"),
+						rset.getString("PHONE"),
+						rset.getString("ADDRESS"),
+						rset.getString("HOBBY"),
+						rset.getDate("ENROLLDATE")
+						);
+				m.setUserNo(rset.getInt("USERNO"));
+				m.setUserId(rset.getString("USERID"));
+				m.setUserPwd(rset.getString("USERPWD"));
+				m.setUserName(rset.getString("USERNAME"));
+				m.setGender(rset.getString("GENDER"));
+				m.setAge(rset.getInt("AGE"));
+				m.setEmail(rset.getString("EMAIL"));
+				m.setPhone(rset.getString("PHONE"));
+				m.setAddress(rset.getString("ADDRESS"));
+				m.setHobby(rset.getString("HOBBY"));
+				m.setEnrollDate(rset.getDate("ENROLLDATE"));
+			}
+			
+			// 조건문 다 끝난 시점에
+			// 만약 조회된 데이터가 없었을 경우 => m = null
+			// 만약 조회된 데이터가 있을 경우 => m은 생성 후 뭐라도 담겨있음
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	/**
 	 * 사용자가 입력한 이름으로 회원정보를 검색해주는 메소드
 	 * @param userName
 	 * @return
