@@ -203,17 +203,6 @@ public class MemberDao {
 						rset.getString("HOBBY"),
 						rset.getDate("ENROLLDATE")
 						);
-				m.setUserNo(rset.getInt("USERNO"));
-				m.setUserId(rset.getString("USERID"));
-				m.setUserPwd(rset.getString("USERPWD"));
-				m.setUserName(rset.getString("USERNAME"));
-				m.setGender(rset.getString("GENDER"));
-				m.setAge(rset.getInt("AGE"));
-				m.setEmail(rset.getString("EMAIL"));
-				m.setPhone(rset.getString("PHONE"));
-				m.setAddress(rset.getString("ADDRESS"));
-				m.setHobby(rset.getString("HOBBY"));
-				m.setEnrollDate(rset.getDate("ENROLLDATE"));
 			}
 			
 			// 조건문 다 끝난 시점에
