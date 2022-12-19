@@ -131,6 +131,9 @@ public class StudentMenu {
 	}
 	
 	public void displayList(ArrayList<Student> list) {
-		System.out.println("\n조회결과\n" + list);
+		System.out.println("\n조회결과\n");
+		for (Student s : list) {
+			System.out.println(s);
+		}
 	}
 }// class end
