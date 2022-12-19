@@ -79,32 +79,25 @@ public class StudentMenu {
 		String studentName = sc.nextLine();
 		
 		System.out.println("수정할 항목");
-		System.out.println("1. 학번");
-		System.out.println("2. 과번호");
-		System.out.println("3. 주소");
+		System.out.println("1. 과번호");
+		System.out.println("2. 주소");
 		System.out.print(" >> ");
 		int menu = sc.nextInt();
 		sc.nextLine();
 		
 		switch(menu) {
 		case 1:
-			System.out.print("학번: ");
-			String studentNo = sc.nextLine();
-			scon.updateMenu(menu, studentName ,studentNo);
-			return;
-			
-		case 2:
-			System.out.println("과번호: ");
+			System.out.print("과번호: ");
 			String departmentNo = sc.nextLine();
 			scon.updateMenu(menu, studentName, departmentNo);
 			return;
 			
-		case 3:
+		case 2:
 			System.out.print("주소: ");
 			String studentAddress = sc.nextLine();
 			scon.updateMenu(menu, studentName, studentAddress);
 			return;
-			
+
 		default:
 			System.out.println("잘못 입력하셨습니다. 다시 입력해주세요.");
 			break;

@@ -34,7 +34,17 @@ public class StudentController {
 	}
 	
 	public void updateMenu(int menu, String studentName , String info) {
-		result = new StudentDao().updateMenu(menu, studentName, info);
+		Student s = new Student();
+		if (menu == 1) {
+			s.setStudentName(studentName);
+			s.setDepartmentNo(info);
+			result = new StudentDao().updateMenu(menu, s);
+		} else if (menu == 2) {
+			s.setStudentName(studentName);
+			s.setStudentAddress(info);
+			result = new StudentDao().updateMenu(menu, s);
+		}
+		
 	
 		if (result > 0) {
 			new StudentMenu().displaySuccess("업데이트 성공");

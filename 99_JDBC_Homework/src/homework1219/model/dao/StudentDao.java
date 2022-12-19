@@ -102,15 +102,14 @@ public class StudentDao {
 		return list;
 	}
 	
-	public int updateMenu(int menu, String studentName, String info) {
+	public int updateMenu(int menu, Student s) {
 		if (menu == 1) {
-			sql = "UPDATE TB_STUDENT SET STUDENT_NO = '" + info + "'" + "WHERE STUDENT_NAME = '" + studentName + "'";
+			sql = "UPDATE TB_STUDENT2 SET DEPARTMENT_NO = '" + s.getDepartmentNo() + "'" + "WHERE STUDENT_NAME = '" + s.getStudentName() + "'";
 		} else if (menu == 2) {
-			sql = "UPDATE TB_STUDENT SET DEPARTMENT_NO = '" + info + "'" + "WHERE STUDENT_NAME = '" + studentName + "'";
-		} else if (menu == 3) {
-			sql = "UPDATE TB_STUDENT SET STUDENT_ADDRESS = '" + info + "'" + "WHERE STUDENT_NAME = '" + studentName + "'";
-		}
-		
+			sql = "UPDATE TB_STUDENT2 "
+					+ "SET STUDENT_ADDRESS = '" + s.getStudentAddress() + "'" 
+					+ "WHERE STUDENT_NAME = '" + s.getStudentName() + "'";
+		} 
 		try {
 			Class.forName("oracle.jdbc.driver.OracleDriver");
 			
@@ -122,7 +121,7 @@ public class StudentDao {
 			
 			if (result > 0) {
 				conn.commit();
-			}else {
+			} else {
 				conn.rollback();
 			}
 		} catch (ClassNotFoundException e) {
