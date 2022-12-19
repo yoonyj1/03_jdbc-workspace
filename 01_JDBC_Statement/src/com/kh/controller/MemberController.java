@@ -80,6 +80,14 @@ public class MemberController {
 		}
 	}
 	
+	/**
+	 * 정보변경 요청 처리해주는 메소드
+	 * @param userId: 변경하고자 하는 회원 아이디
+	 * @param userPwd: 변경할 비밀번호
+	 * @param email: 변경할 이메일
+	 * @param phone: 변경할 전화번호
+	 * @param address: 변경할 주소
+	 */
 	public void updateMember(String userId, String userPwd, String email, String phone, String address) {
 		Member m = new Member();
 		
@@ -95,6 +103,20 @@ public class MemberController {
 			new MemberMenu().displaySuccess("변경 성공");
 		} else {
 			new MemberMenu().displayFail("변경 실패");
+		}
+	}
+	
+	/**
+	 * 사용자에게 삭제할 아이디를 입력받아 회원정보를 삭제 처리 요청하는 메소드
+	 * @param userId: 삭제할 아이디
+	 */
+	public void deleteMember(String userId) {
+		int result = new MemberDao().deleteMember(userId);
+		
+		if (result > 0) {
+			new MemberMenu().displaySuccess("삭제 성공");
+		} else {
+			new MemberMenu().displayFail("삭제 실패");
 		}
 	}
 	

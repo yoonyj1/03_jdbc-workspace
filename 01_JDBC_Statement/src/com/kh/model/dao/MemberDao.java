@@ -282,6 +282,11 @@ public class MemberDao {
 		return list;
 	}
 	
+	/**
+	 * 사용자가 입력한 아이디로 정보 변경 요청 처리하는 메소드
+	 * @param m
+	 * @return result: 처리된 행 수
+	 */
 	public int updateMember(Member m) {
 		// update문 => 처리된 행 수 (int) -> 트랜잭션 처리
 		
@@ -324,7 +329,49 @@ public class MemberDao {
 				e.printStackTrace();
 			}
 		}
+		return result;
+	}
+	
+	/**
+	 * 사용자에게 삭제할 아이디를 입력받아 회원정보를 삭제 처리하는 메소드
+	 * @param userId: 사용자에게 입력받은 삭제하고자하는 아이디
+	 * @return: 처리 된 행 수 
+	 */
+	public int deleteMember(String userId) {
+		// delete문 => 처리된 행 수 (int) -> 트랜잭션 처리
+		int result = 0;
 		
+		Connection conn = null;
+		Statement stmt = null;
+		
+		String sql = "DELETE FROM MEMBER WHERE USERID = '" + userId + "'";
+		
+		try {
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+			
+			conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "JDBC", "JDBC");
+			
+			stmt = conn.createStatement();
+			
+			result = stmt.executeUpdate(sql);
+			
+			if (result > 0) {
+				conn.commit();
+			} else {
+				conn.rollback();
+			}
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				stmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
 		return result;
 	}
 	

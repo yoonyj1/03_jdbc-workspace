@@ -18,7 +18,7 @@ public class MemberMenu {
 	 * 사용자가 보게 될 첫 화면(메인 화면)
 	 */
 	public void mainMenu() {
-
+		
 		while (true) {
 			System.out.println("\n   	== 회원관리 프로그램 ==");
 			System.out.println("┌───────────────────────────────┐");
@@ -45,13 +45,14 @@ public class MemberMenu {
 				break;
 
 			case 3:
-				String userId = inputMemberId();
-				mc.selectByUserId(userId);
+				// String userId = inputMemberId();
+				mc.selectByUserId(inputMemberId());
 				break;
 
 			case 4:
-				String keyword = inputMemberName();
-				mc.selectByUserName(keyword);
+				// String keyword = inputMemberName();
+				// mc.selectByUserName(keyword);
+				mc.selectByUserName(inputMemberName());
 				break;
 
 			case 5:
@@ -59,6 +60,9 @@ public class MemberMenu {
 				break;
 
 			case 6:
+				// String userId2 = inputMemberId();
+				// mc.deleteMember(userId2);
+				mc.deleteMember(inputMemberId());
 				break;
 				
 			case 9:
@@ -135,7 +139,7 @@ public class MemberMenu {
 	}
 	
 	/**
-	 * 사용자에게 변경할 정보들(비밀번호, 이메일, 전화번호, 주소)과 해당 회원 아이디 입력받는 화면
+	 * 5. 사용자에게 변경할 정보들(비밀번호, 이메일, 전화번호, 주소)과 해당 회원 아이디 입력받는 화면ㅔ
 	 */
 	public void updateMember() {
 		System.out.println("\n===== 회원정보 변경 =====");
@@ -161,6 +165,7 @@ public class MemberMenu {
 		
 		mc.updateMember(userId, userPwd, email, phone, address);
 	}
+	
 	/**
 	 * 9. 이름으로 정보 검색하는 화면
 	 */
