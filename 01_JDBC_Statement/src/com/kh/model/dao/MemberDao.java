@@ -163,10 +163,11 @@ public class MemberDao {
 	}
 	
 	/**
-	 * 사용자가 입력한 아이디로 검색해주는 메소드
-	 * @param userId
+	 * 사용자가 입력한 아이디로 회원정보 검색 요청을 요청 처리해주는 메소드
+	 * @param userId: 사용자가 입력한 검색하고자하는 회원 아이디 값
+	 * @return 검색 된 결과가 있으면 Member객체 | 없으면 null
 	 */
-	public void selectByUserId(String userId) {
+	public Member selectByUserId(String userId) {
 		// SELECT문 (한 행만 조회됨) => ResultSet 객체에 넣어야함
 		// ArrayList 필요없음 Member 객체 하나에 담으면 됨
 		Member m = null; // 조회 결과가 있을수도 있고 없을수도 있기 때문에
@@ -212,8 +213,69 @@ public class MemberDao {
 			e.printStackTrace();
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} finally {
+			try {
+				rset.close();
+				stmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
+		return m;
+	}
+	
+	public ArrayList<Member> selectByUserName(String keyword) {
+		// SELECT문 수행(여러행) => ResultSet
+		// ArrayList로 짜야함
+		ArrayList<Member> list = null;
 		
+		Connection conn = null;
+		Statement stmt = null;
+		ResultSet rset = null;
+		
+		String sql = "SELECT * FROM MEMBER WHERE USERNAME LIKE '%"+ keyword + "%'"; 
+		
+		try {
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+			
+			conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "JDBC", "JDBC");
+			
+			stmt = conn.createStatement();
+			
+			rset = stmt.executeQuery(sql);
+			
+			while (rset.next()) {
+				Member m = new Member(rset.getInt("USERNO"),
+						rset.getString("USERID"),
+						rset.getString("USERPWD"),
+						rset.getString("USERNAME"),
+						rset.getString("GENDER"),
+						rset.getInt("AGE"),
+						rset.getString("EMAIL"),
+						rset.getString("PHONE"),
+						rset.getString("ADDRESS"),
+						rset.getString("HOBBY"),
+						rset.getDate("ENROLLDATE")
+						);
+				
+				list.add(m);
+			}
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				rset.close();
+				stmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			
+		}
+		return list;
 	}
 	
 	/**

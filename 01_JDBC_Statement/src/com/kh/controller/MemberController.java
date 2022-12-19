@@ -57,8 +57,22 @@ public class MemberController {
 	} // selectList end
 	
 	public void selectByUserId(String userId) {
-		new MemberDao().selectByUserId(userId);
+		Member m = new MemberDao().selectByUserId(userId);
+		
+		if (m == null) { // 검색결과가 없을 경우(조회된 데이터 X)
+			new MemberMenu().displayNoData(userId + "에 해당하는 결과가 없습니다.");
+		} else {
+			new MemberMenu().displayMember(m);
+		}
 	} // selectByUserId end
+	
+	/**
+	 * 
+	 * @param keyword: 사용자에게 입력받은 키워드
+	 */
+	public void selectByUserName(String keyword) {
+		new MemberDao().selectByUserName(keyword);
+	}
 	
 	/**
 	 * 이름으로 회원 정보를 조회요청을 처리해주는 메소드

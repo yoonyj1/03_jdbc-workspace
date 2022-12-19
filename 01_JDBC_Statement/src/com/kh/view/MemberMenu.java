@@ -20,7 +20,7 @@ public class MemberMenu {
 	public void mainMenu() {
 
 		while (true) {
-			System.out.println("\n   == 회원관리 프로그램 ==");
+			System.out.println("\n   	== 회원관리 프로그램 ==");
 			System.out.println("┌───────────────────────────────┐");
 			System.out.println("│   1. 회원 추가      		│");
 			System.out.println("│   2. 회원 전체 조회      		│");
@@ -50,6 +50,8 @@ public class MemberMenu {
 				break;
 
 			case 4:
+				String keyword = inputMemberName();
+				mc.selectByUserName(keyword);
 				break;
 
 			case 5:
@@ -121,6 +123,16 @@ public class MemberMenu {
 		System.out.print("\n회원 아이디 입력: ");
 		return sc.nextLine();
 	}
+	
+	/**
+	 * 4. 사용자에게 검색할 회원명(키워드)를 입력받은 후 입력된 값을 반환시켜주는 메소드
+	 * @return: 사용자가 입력한 회원명(키워드)
+	 */
+	public String inputMemberName() {
+		System.out.print("\n회원 이름(키워드) 입력: ");
+		return sc.nextLine();
+	}
+	
 	/**
 	 * 9. 이름으로 정보 검색하는 화면
 	 */
@@ -157,7 +169,7 @@ public class MemberMenu {
 	}
 	
 	/**
-	 * 조회 서비스 성공 일 경우 보게되는 화면
+	 * 조회 결과가 여러 행일 경우 보게 될 화면
 	 * @param list
 	 */
 	public void displayMemberList(ArrayList<Member> list) {
@@ -171,6 +183,15 @@ public class MemberMenu {
 		for (Member m : list) {
 			System.out.println(m);
 		}
+	}
+	
+	/**
+	 * 조회 결과가 한 행일 경우 보게 될 화면
+	 * @param m
+	 */
+	public void displayMember(Member m) {
+		System.out.println("\n조회된 데이터는 다음과 같습니다.");
+		System.out.println(m);
 	}
 	
 }// class end
