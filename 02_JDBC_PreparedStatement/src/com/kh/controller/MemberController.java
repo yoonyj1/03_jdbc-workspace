@@ -17,18 +17,29 @@ public class MemberController {
 	/**
 	 * 사용자의 회원 추가 요청을 처리해주는 메소드
 	 * @param userId ~ hobby: 사용자가 입력했던 정보들이 담겨있는 매개변수
-	 * 
 	 */
 	public void insertMember(String userId, String userPwd, String userName, String gender, String age, String email,
 			String phone, String address, String hobby) {
 		Member m = new Member(userId, userPwd, userName, gender, Integer.parseInt(age), email, phone, address, hobby);
 		
-		new MemberDao().insertMember(m);
+		int result = new MemberDao().insertMember(m);
+		
+		if (result > 0) {
+			new MemberMenu().displaySuccess("회원 추가 완료");
+		} else {
+			new MemberMenu().displayFail("회원 추가 실패");
+		}
 	} // insertMember end
 	
 	
 	public void selectList() {
+		ArrayList<Member> list = new MemberDao().selectList();
 		
+		if (list.isEmpty()) {
+			new MemberMenu().displayNoData("조회 결과 없음");
+		} else {
+			new MemberMenu().displayMemberList(list);
+		}
 		
 	} // selectList end
 	
