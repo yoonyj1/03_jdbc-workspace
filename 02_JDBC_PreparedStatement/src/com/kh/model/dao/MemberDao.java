@@ -171,16 +171,16 @@ public class MemberDao {
 			
 			if(rset.next()) {
 				m = new Member(rset.getInt("USERNO"),
-									  rset.getString("USERID"), 
-									  rset.getString("USERPWD"),
-									  rset.getString("USERNAME"),
-									  rset.getString("gender"),
-									  rset.getInt("age"), 
-									  rset.getString("email"),
-									  rset.getString("phone"),
-									  rset.getString("ADDRESS"),
-									  rset.getString("HOBBY"),
-									  rset.getDate("ENROLLDATE"));
+							   rset.getString("USERID"), 
+							   rset.getString("USERPWD"),
+							   rset.getString("USERNAME"),
+							   rset.getString("gender"),
+							   rset.getInt("age"), 
+							   rset.getString("email"),
+							   rset.getString("phone"),
+							   rset.getString("ADDRESS"),
+							   rset.getString("HOBBY"),
+							   rset.getDate("ENROLLDATE"));
 			}
 	
 		} catch (ClassNotFoundException e) {
@@ -208,6 +208,7 @@ public class MemberDao {
 		ResultSet rset = null;
 		
 		String sql = "SELECT * FROM MEMBER WHERE USERNAME LIKE ?";
+		// String sql = "SELECT * FROM MEMBER WHERE USERNAME LIKE '%' || ? || '%'";  ==>'%''keyword''%' ==> '%keyword%' 
 		
 		try {
 			Class.forName("oracle.jdbc.driver.OracleDriver");
