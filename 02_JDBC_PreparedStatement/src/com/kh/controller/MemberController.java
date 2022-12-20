@@ -44,8 +44,13 @@ public class MemberController {
 	} // selectList end
 	
 	public void selectByUserId(String userId) {
+		Member m = new MemberDao().selectByUserId(userId);
 		
-		
+		if (m == null) {
+			new MemberMenu().displayFail("조회 결과 없음");
+		} else {
+			new MemberMenu().displayMember(m);
+		}
 	} // selectByUserId end
 	
 	/**
@@ -53,7 +58,13 @@ public class MemberController {
 	 * @param keyword: 사용자에게 입력받은 키워드
 	 */
 	public void selectByUserName(String keyword) {
-
+		ArrayList<Member> list = new MemberDao().selectByUserName(keyword);
+		
+		if (list.isEmpty()) {
+			new MemberMenu().displayFail("조회 결과 없음");
+		} else {
+			new MemberMenu().displayMemberList(list);
+		}
 	
 	}
 	
@@ -66,8 +77,13 @@ public class MemberController {
 	 * @param address: 변경할 주소
 	 */
 	public void updateMember(String userId, String userPwd, String email, String phone, String address) {
+		int result = new MemberDao().updateMember(userId, userPwd, email, phone, address);
 		
-		
+		if (result > 0) {
+			new MemberMenu().displaySuccess("변경 완료");
+		} else {
+			new MemberMenu().displayFail("변경 실패");
+		}
 	}
 	
 	/**
@@ -76,7 +92,13 @@ public class MemberController {
 	 */
 	public void deleteMember(String userId) {
 
-	
+		int result = new MemberDao().deleteMember(userId);
+		
+		if (result > 0) {
+			new MemberMenu().displaySuccess("삭제 완료");
+		} else {
+			new MemberMenu().displayFail("삭제 실패");
+		}
 	}
 	
 	/**
@@ -84,7 +106,13 @@ public class MemberController {
 	 * @param userName
 	 */
 	public void selectNameInfo(String userName) {
-
+		ArrayList<Member> list = new MemberDao().selectNameInfo(userName);
+		
+		if (list.isEmpty()) {
+			new MemberMenu().displayFail("조회 결과 없음");
+		} else {
+			new MemberMenu().displayMemberList(list);
+		}
 	
 	} // selectNameInfo end
 	

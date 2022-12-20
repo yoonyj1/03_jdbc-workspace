@@ -150,5 +150,240 @@ public class MemberDao {
 		return list;
 	} // selectList end
 	
+	public Member selectByUserId(String userId) {
+		Member m = null;
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		
+		String sql = "SELECT * FROM MEMBER WHERE USERID = ?";
+		
+		try {
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+			
+			conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "JDBC", "JDBC");
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, userId);
+			
+			rset = pstmt.executeQuery();
+			
+			if(rset.next()) {
+				m = new Member(rset.getInt("USERNO"),
+									  rset.getString("USERID"), 
+									  rset.getString("USERPWD"),
+									  rset.getString("USERNAME"),
+									  rset.getString("gender"),
+									  rset.getInt("age"), 
+									  rset.getString("email"),
+									  rset.getString("phone"),
+									  rset.getString("ADDRESS"),
+									  rset.getString("HOBBY"),
+									  rset.getDate("ENROLLDATE"));
+			}
+	
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				rset.close();
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			
+		}
+		return m;
+	} // selectByUserID end
+	
+	public ArrayList<Member> selectByUserName(String keyword) {
+		ArrayList<Member> list = new ArrayList<Member>();
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		
+		String sql = "SELECT * FROM MEMBER WHERE USERNAME LIKE ?";
+		
+		try {
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+			
+			conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "JDBC", "JDBC");
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, "%" + keyword + "%");
+			
+			rset = pstmt.executeQuery();
+			
+			while (rset.next()) {
+				list.add(new Member(rset.getInt("USERNO"), 
+						rset.getString("USERID"), 
+						rset.getString("USERPWD"), 
+						rset.getString("USERNAME"), 
+						rset.getString("GENDER"), 
+						rset.getInt("AGE"), 
+						rset.getString("EMAIL"), 
+						rset.getString("PHONE"),
+						rset.getString("ADDRESS"),
+						rset.getString("HOBBY"), 
+						rset.getDate("ENROLLDATE")
+						));
+			}
+			
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				rset.close();
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			
+		}
+		
+		return list;
+	} // selectByUserName end
+	
+	public int updateMember(String userId, String userPwd, String email, String phone, String address) {
+		int result = 0;
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		
+		String sql = "UPDATE MEMBER SET USERPWD = ?, EMAIL = ?, PHONE = ?, ADDRESS = ? WHERE USERID = ?";
+		
+		try {
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+			
+			conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "JDBC", "JDBC");
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, userPwd);
+			pstmt.setString(2, email);
+			pstmt.setString(3, phone);
+			pstmt.setString(4, address);
+			pstmt.setString(5, userId);
+			
+			result = pstmt.executeUpdate();
+			
+			if (result > 0) {
+				conn.commit();
+			} else {
+				conn.rollback();
+			}
+			
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return result;
+	} // updateMember end
+	
+	public int deleteMember(String userId) {
+		int result = 0;
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		
+		String sql = "DELETE FROM MEMBER WHERE USERID = ?";
+		
+		try {
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+			
+			conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "JDBC", "JDBC");
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, userId);
+			
+			result = pstmt.executeUpdate();
+			
+			if (result > 0) {
+				conn.commit();
+			} else {
+				conn.rollback();
+			}
+		
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return result;
+	} // deleteMember end
+	
+	public ArrayList<Member> selectNameInfo(String userName) {
+		ArrayList<Member> list = new ArrayList<Member>();
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		
+		String sql = "SELECT * FROM MEMBER WHERE USERNAME = ?";
+		
+		try {
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+			
+			conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "JDBC", "JDBC");
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, userName);
+			
+			rset = pstmt.executeQuery();
+			
+			while (rset.next()) {
+				list.add(new Member(rset.getInt("USERNO"), 
+						rset.getString("USERID"), 
+						rset.getString("USERPWD"), 
+						rset.getString("USERNAME"), 
+						rset.getString("GENDER"), 
+						rset.getInt("AGE"), 
+						rset.getString("EMAIL"), 
+						rset.getString("PHONE"),
+						rset.getString("ADDRESS"),
+						rset.getString("HOBBY"), 
+						rset.getDate("ENROLLDATE")
+						));
+			}
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				rset.close();
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return list;
+		
+	}
 	
 } // class end
