@@ -116,9 +116,21 @@ public class MemberController {
 	
 	} // selectNameInfo end
 	
-	public int login(String adminId, String adminPwd) {
+	public boolean login(String adminId, String adminPwd) {
 		int result = new MemberDao().login(adminId, adminPwd);
-
-		return result;
+		boolean loginResult = true;
+		
+		if (result == 1) {
+			new MemberMenu().displaySuccess("로그인 성공");
+			loginResult = true;
+		} else if (result == 2) {
+			if (!adminId.equals("admin")) {
+				new MemberMenu().displayFail("로그인 실패, 아이디를 확인하세요");
+			} else if (!adminPwd.equals("1234")){
+				new MemberMenu().displayFail("로그인 실패, 비밀번호를 확인하세요");
+			} 
+			loginResult = false;
+		}
+		return loginResult;
 	}
 } // class end

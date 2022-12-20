@@ -402,22 +402,14 @@ public class MemberDao {
 			pstmt.setString(1, adminId);
 			pstmt.setString(2, adminPwd);
 			
-			
 			rset = pstmt.executeQuery();
 			
-//			String inputId = rset.getString("USERID");
-//			String inputPwd = rset.getString("USERPWD");
-			
 			if (rset.next()) {
-				if (adminPwd.equals(rset.getString("USERPWD")) && adminId.equals(rset.getString("USERID"))) {
-					result = 1;
-				} else if (!(adminId.equals(rset.getString("USERID"))) && adminPwd.equals(rset.getString("USERPWD"))) {
-					result = 2; // 아이디 틀린 경우
-				} else if (!(adminPwd.equals(rset.getString("USERPWD"))) && adminId.equals(rset.getString("USERID"))) {
-					result = 3; // 비밀번호 틀린 경우
-				}
+				result = 1;
+			} else {
+				result = 2;
 			}
-				
+
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {

@@ -24,85 +24,71 @@ public class MemberMenu {
 	 * 사용자가 보게 될 첫 화면(메인 화면)
 	 */
 	public void mainMenu() {
-		System.out.println( "== 관리자 로그인 메뉴 ==");
-		System.out.print("관리자 아이디: ");
-		String adminId = sc.nextLine();
+
+		boolean result = login();
 		
-		System.out.print("비밀번호: ");
-		String adminPwd = sc.nextLine();
-		
-		int result = mc.login(adminId, adminPwd);
-		
-		if (result == 1) {
-			displaySuccess("로그인 성공");
-		}
-		if (result == 2) {
-			new MemberMenu().displayFail("로그인 실패, 아이디를 확인하세요");
-		} 
-		if (result == 3) {
-			new MemberMenu().displayFail("로그인 실패, 비밀번호를 확인하세요");
-		} 
-		if (result == 4) {
-			new MemberMenu().displayFail("로그인 실패, 아이디, 비밀번호를 확인하세요");
-		}
-		
-		while (true) {
-			System.out.println("\n   	== 회원관리 프로그램 ==");
-			System.out.println("┌───────────────────────────────┐");
-			System.out.println("│   1. 회원 추가      		│");
-			System.out.println("│   2. 회원 전체 조회      		│");
-			System.out.println("│   3. 회원 아이디 검색      	│");
-			System.out.println("│   4. 회원 이름으로 키워드 검색   	│");
-			System.out.println("│   5. 회원 정보 변경      		│");
-			System.out.println("│   6. 회원탈퇴      		│");
-			System.out.println("│   9. 이름으로 정보 조회    		│");
-			System.out.println("│   0. 프로그램 종료     	  	│");
-			System.out.println("└───────────────────────────────┘");
-			System.out.print(">> 메뉴 선택 : ");
-			int menu = sc.nextInt();
-			sc.nextLine();
+		if (result) {
+			while (true) {
+				System.out.println("\n   	== 회원관리 프로그램 ==");
+				System.out.println("┌───────────────────────────────┐");
+				System.out.println("│   1. 회원 추가      		│");
+				System.out.println("│   2. 회원 전체 조회      		│");
+				System.out.println("│   3. 회원 아이디 검색      	│");
+				System.out.println("│   4. 회원 이름으로 키워드 검색   	│");
+				System.out.println("│   5. 회원 정보 변경      		│");
+				System.out.println("│   6. 회원탈퇴      		│");
+				System.out.println("│   9. 이름으로 정보 조회    		│");
+				System.out.println("│   0. 프로그램 종료     	  	│");
+				System.out.println("└───────────────────────────────┘");
+				System.out.print(">> 메뉴 선택 : ");
+				int menu = sc.nextInt();
+				sc.nextLine();
 
-			switch (menu) {
-			case 1:
-				inputMember();
-				break;
+				switch (menu) {
+				case 1:
+					inputMember();
+					break;
 
-			case 2:
-				mc.selectList(); // 입력받을 것 없으면 바로 Controller 호출
-				break;
+				case 2:
+					mc.selectList(); // 입력받을 것 없으면 바로 Controller 호출
+					break;
 
-			case 3:
-				mc.selectByUserId(inputMemberId());
-				break;
+				case 3:
+					mc.selectByUserId(inputMemberId());
+					break;
 
-			case 4:
-				mc.selectByUserName(inputMemberName());
-				break;
+				case 4:
+					mc.selectByUserName(inputMemberName());
+					break;
 
-			case 5:
-				updateMember();
-				break;
+				case 5:
+					updateMember();
+					break;
 
-			case 6:
-				mc.deleteMember(inputMemberId());
-				break;
+				case 6:
+					mc.deleteMember(inputMemberId());
+					break;
+
+				case 9:
+					selectNameInfo();
+					break;
+
+				case 0:
+					System.out.println("이용해주셔서 감사합니다.");
+					return;
+
+				default:
+					System.out.println("메뉴를 잘못 입력했습니다. 다시 입력해주세요");
+					break;
+
+				} // switch end
 				
-			case 9:
-				selectNameInfo();
-				break;
-
-			case 0:
-				System.out.println("이용해주셔서 감사합니다.");
-				return;
-
-			default:
-				System.out.println("메뉴를 잘못 입력했습니다. 다시 입력해주세요");
-				break;
-
-			} // switch end
-
-		} // while end
-
+			} // while end
+			
+		} else { 
+			mainMenu();
+		}
+		
 	} // mainMenu end
 
 	/**
@@ -191,6 +177,21 @@ public class MemberMenu {
 		String userName = sc.nextLine();
 		
 		mc.selectNameInfo(userName);
+	}
+	
+	public boolean login() {
+		boolean result = true;
+		
+		System.out.println( "== 관리자 로그인 메뉴 ==");
+		System.out.print("관리자 아이디: ");
+		String adminId = sc.nextLine();
+		
+		System.out.print("비밀번호: ");
+		String adminPwd = sc.nextLine();
+		
+		result = mc.login(adminId, adminPwd);
+		
+		return result;
 	}
 	
 	//-------------------------------------- 응답화면 -----------------------------------------
