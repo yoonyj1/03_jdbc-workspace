@@ -14,6 +14,7 @@ import com.kh.view.MemberMenu;
 
 public class MemberController {
 
+	// private MemberMenu mm = new MemberMenu();
 	/**
 	 * 사용자의 회원 추가 요청을 처리해주는 메소드
 	 * @param userId ~ hobby: 사용자가 입력했던 정보들이 담겨있는 매개변수

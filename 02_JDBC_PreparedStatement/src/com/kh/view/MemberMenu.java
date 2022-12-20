@@ -15,12 +15,9 @@ import java.util.Scanner;
 import com.kh.controller.MemberController;
 import com.kh.model.vo.Member;
 
-// View: 사용자가 보게 될 시각적인 요소(화면) 출력 및 입력
 public class MemberMenu {
-	// Scanner 객체 생성(전역으로 다 쓸 수 있도록)
 	private Scanner sc = new Scanner(System.in);
 
-	// MemberController 객체 생성(전역에서 바로 요청할 수 있게끔)
 	private MemberController mc = new MemberController();
 
 	/**
@@ -54,13 +51,10 @@ public class MemberMenu {
 				break;
 
 			case 3:
-				// String userId = inputMemberId();
 				mc.selectByUserId(inputMemberId());
 				break;
 
 			case 4:
-				// String keyword = inputMemberName();
-				// mc.selectByUserName(keyword);
 				mc.selectByUserName(inputMemberName());
 				break;
 
@@ -69,8 +63,6 @@ public class MemberMenu {
 				break;
 
 			case 6:
-				// String userId2 = inputMemberId();
-				// mc.deleteMember(userId2);
 				mc.deleteMember(inputMemberId());
 				break;
 				
@@ -153,11 +145,6 @@ public class MemberMenu {
 	public void updateMember() {
 		System.out.println("\n===== 회원정보 변경 =====");
 		
-		// 비밀번호, 이메일, 전화번호, 주소, 아이디
-		/*
-		System.out.print("회원정보를 변경할 회원아이디 입력: ");
-		String userId = sc.nextLine();
-		*/
 		String userId = inputMemberId(); // 위의 두 줄을 다음과 같이 줄일 수 있음
 		
 		System.out.print("변경할 암호: ");
@@ -216,12 +203,6 @@ public class MemberMenu {
 	 */
 	public void displayMemberList(ArrayList<Member> list) {
 		System.out.println("\n 조회된 데이터는 다음과 같습니다.");
-		// 단순 for 문
-		// for (int i = 0; i < list.size() - 1; i++) {
-		// System.out.println(list.get(i));
-		// }
-		
-		// 향상 된 for 문
 		for (Member m : list) {
 			System.out.println(m);
 		}
