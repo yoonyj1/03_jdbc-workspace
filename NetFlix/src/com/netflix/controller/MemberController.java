@@ -15,9 +15,6 @@ public class MemberController {
 	int result = 0;
 	boolean dml = true;
 	
-	Member m = new Member();
-	ArrayList<Member> list = null;
-
 	/**
 	 * 1. Insert를 처리하는 메소드
 	 * @param menu
@@ -49,7 +46,7 @@ public class MemberController {
 		
 		Date date1 = Date.valueOf(signUpDate);
 
-		m = new Member(memId, nickname, date1, Integer.parseInt(point));
+		Member m = new Member(memId, nickname, date1, Integer.parseInt(point));
 		
 		if (menu == 1) {
 			m.setGrade("Basic");
@@ -72,7 +69,7 @@ public class MemberController {
 	public void selectMenu() {
 		dml = false;
 		
-		list = new MemberDao().selectMenu();
+		ArrayList<Member> list = new MemberDao().selectMenu();
 		
 		if(list.isEmpty()) {
 			new MemberMenu().displayNoData("조회결과 없음");
@@ -90,7 +87,7 @@ public class MemberController {
 	public void selectInfo(int menu, String info) {
 		dml = false;
 		
-		list = new MemberDao().selectMenu(menu, info);
+		ArrayList<Member> list = new MemberDao().selectMenu(menu, info);
 		
 		if(list.isEmpty()) {
 			new MemberMenu().displayNoData("조회결과 없음");
@@ -109,7 +106,7 @@ public class MemberController {
 		dml = true;
 		type = "수정";
 		
-		m = new Member(memId, nickname, Integer.parseInt(point));
+		Member m = new Member(memId, nickname, Integer.parseInt(point));
 		
 		result = new MemberDao().dml(type, m);
 		
@@ -124,7 +121,7 @@ public class MemberController {
 		dml = true;
 		type = "삭제";
 		
-		m = new Member(memId);
+		Member m = new Member(memId);
 		
 		result = new MemberDao().dml(type, m);
 		

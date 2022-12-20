@@ -2,6 +2,7 @@ package homework1219.model.dao;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -13,7 +14,7 @@ public class StudentDao {
 
 	int result = 0;
 	Connection conn = null;
-	Statement stmt = null;
+	PreparedStatement pstmt = null;
 	ResultSet rset = null;
 	
 	String sql = null;
@@ -21,22 +22,22 @@ public class StudentDao {
 	
 	public int insertMenu(Student s) {
 		
-		sql = "INSERT INTO TB_STUDENT2 VALUES("
-				+ "'" + s.getStudentNo() + "', "
-				+ "'" + s.getDepartmentNo() + "', "
-				+ "'" + s.getStudentName() + "', "
-				+ "'" + s.getStudentSsn() + "', "
-				+ "'" + s.getStudentAddress() +"', "
-				+ null + ", " + null + ", " + null + ")";
-		
+		sql = "INSERT INTO TB_STUDENT2 VALUES(?, ?, ?, ?, ?, null, null, null)";
+				
 		try {
 			Class.forName("oracle.jdbc.driver.OracleDriver");
 			
 			conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "WORKBOOK", "WORKBOOK");
 			
-			stmt = conn.createStatement();
+			pstmt = conn.prepareStatement(sql);
 			
-			result = stmt.executeUpdate(sql);
+			pstmt.setString(1, s.getStudentNo());
+			pstmt.setString(2, s.getDepartmentNo());
+			pstmt.setString(3, s.getStudentName());
+			pstmt.setString(4, s.getStudentSsn());
+			pstmt.setString(5, s.getStudentAddress());
+			
+			result = pstmt.executeUpdate();
 			
 			if (result > 0) {
 				conn.commit();
@@ -49,7 +50,7 @@ public class StudentDao {
 			e.printStackTrace();
 		} finally {
 			try {
-				stmt.close();
+				pstmt.close();
 				conn.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -69,9 +70,9 @@ public class StudentDao {
 			
 			conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "WORKBOOK", "WORKBOOK");
 			
-			stmt = conn.createStatement();
+			pstmt = conn.prepareStatement(sql);
 			
-			rset = stmt.executeQuery(sql);
+			rset = pstmt.executeQuery();
 			
 			while(rset.next()) {
 				list.add(new Student(
@@ -93,7 +94,7 @@ public class StudentDao {
 		} finally {
 			try {
 				rset.close();
-				stmt.close();
+				pstmt.close();
 				conn.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -103,21 +104,24 @@ public class StudentDao {
 	}
 	
 	public int updateMenu(int menu, Student s) {
-		if (menu == 1) {
-			sql = "UPDATE TB_STUDENT2 SET DEPARTMENT_NO = '" + s.getDepartmentNo() + "'" + "WHERE STUDENT_NAME = '" + s.getStudentName() + "'";
-		} else if (menu == 2) {
-			sql = "UPDATE TB_STUDENT2 "
-					+ "SET STUDENT_ADDRESS = '" + s.getStudentAddress() + "'" 
-					+ "WHERE STUDENT_NAME = '" + s.getStudentName() + "'";
-		} 
 		try {
 			Class.forName("oracle.jdbc.driver.OracleDriver");
 			
 			conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "WORKBOOK", "WORKBOOK");
 			
-			stmt = conn.createStatement();
+			pstmt = conn.prepareStatement(sql);
 			
-			result = stmt.executeUpdate(sql);
+			if (menu == 1) {
+				sql = "UPDATE TB_STUDENT2 SET DEPARTMENT_NO = ? WHERE STUDENT_NAME = ?";
+				pstmt.setString(1, s.getDepartmentNo());
+				pstmt.setString(2, s.getStudentName());
+			} else if (menu == 2) {
+				sql = "UPDATE TB_STUDENT2 SET STUDENT_ADDRESS = ? WHERE STUDENT_NAME = ?";
+				pstmt.setString(1, s.getStudentAddress());
+				pstmt.setString(2, s.getStudentName());
+			} 
+			
+			result = pstmt.executeUpdate();
 			
 			if (result > 0) {
 				conn.commit();
@@ -130,7 +134,7 @@ public class StudentDao {
 			e.printStackTrace();
 		} finally {
 			try {
-				stmt.close();
+				pstmt.close();
 				conn.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -141,16 +145,18 @@ public class StudentDao {
 	}
 	
 	public int deleteMenu(String studentName) {
-		sql = "DELETE FROM TB_STUDENT2 WHERE STUDENT_NAME = '" + studentName + "'";
+		sql = "DELETE FROM TB_STUDENT2 WHERE STUDENT_NAME = ?";
 		
 		try {
 			Class.forName("oracle.jdbc.driver.OracleDriver");
 			
 			conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "WORKBOOK", "WORKBOOK");
 			
-			stmt = conn.createStatement();
+			pstmt = conn.prepareStatement(sql);
 			
-			result = stmt.executeUpdate(sql);
+			pstmt.setString(1, studentName);
+			
+			result = pstmt.executeUpdate();
 			
 			if (result > 0) {
 				conn.commit();
@@ -163,7 +169,7 @@ public class StudentDao {
 			e.printStackTrace();
 		} finally {
 			try {
-				stmt.close();
+				pstmt.close();
 				conn.close();
 			} catch (SQLException e) {
 				e.printStackTrace();

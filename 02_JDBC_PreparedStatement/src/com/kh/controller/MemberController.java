@@ -116,4 +116,9 @@ public class MemberController {
 	
 	} // selectNameInfo end
 	
+	public int login(String adminId, String adminPwd) {
+		int result = new MemberDao().login(adminId, adminPwd);
+
+		return result;
+	}
 } // class end

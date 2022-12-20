@@ -24,6 +24,27 @@ public class MemberMenu {
 	 * 사용자가 보게 될 첫 화면(메인 화면)
 	 */
 	public void mainMenu() {
+		System.out.println( "== 관리자 로그인 메뉴 ==");
+		System.out.print("관리자 아이디: ");
+		String adminId = sc.nextLine();
+		
+		System.out.print("비밀번호: ");
+		String adminPwd = sc.nextLine();
+		
+		int result = mc.login(adminId, adminPwd);
+		
+		if (result == 1) {
+			displaySuccess("로그인 성공");
+		}
+		if (result == 2) {
+			new MemberMenu().displayFail("로그인 실패, 아이디를 확인하세요");
+		} 
+		if (result == 3) {
+			new MemberMenu().displayFail("로그인 실패, 비밀번호를 확인하세요");
+		} 
+		if (result == 4) {
+			new MemberMenu().displayFail("로그인 실패, 아이디, 비밀번호를 확인하세요");
+		}
 		
 		while (true) {
 			System.out.println("\n   	== 회원관리 프로그램 ==");

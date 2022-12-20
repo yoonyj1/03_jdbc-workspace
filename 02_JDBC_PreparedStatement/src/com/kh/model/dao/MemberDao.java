@@ -249,7 +249,6 @@ public class MemberDao {
 			}
 			
 		}
-		
 		return list;
 	} // selectByUserName end
 	
@@ -382,9 +381,49 @@ public class MemberDao {
 				e.printStackTrace();
 			}
 		}
-		
 		return list;
-		
 	}
 	
+	public int login(String adminId, String adminPwd) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		
+		int result = 0;
+		
+		String sql = "SELECT * FROM MEMBER WHERE USERID = ? AND USERPWD = ?";
+		
+		try {
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+			
+			conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "JDBC", "JDBC");
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, adminId);
+			pstmt.setString(2, adminPwd);
+			
+			
+			rset = pstmt.executeQuery();
+			
+//			String inputId = rset.getString("USERID");
+//			String inputPwd = rset.getString("USERPWD");
+			
+			if (rset.next()) {
+				if (adminPwd.equals(rset.getString("USERPWD")) && adminId.equals(rset.getString("USERID"))) {
+					result = 1;
+				} else if (!(adminId.equals(rset.getString("USERID"))) && adminPwd.equals(rset.getString("USERPWD"))) {
+					result = 2; // 아이디 틀린 경우
+				} else if (!(adminPwd.equals(rset.getString("USERPWD"))) && adminId.equals(rset.getString("USERID"))) {
+					result = 3; // 비밀번호 틀린 경우
+				}
+			}
+				
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
 } // class end

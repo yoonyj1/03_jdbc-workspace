@@ -195,6 +195,6 @@ public class MemberMenu {
 		System.out.println("ID\t등급\t닉네임\t가입일\t\t포인트");
 		for (Member m : list) {
 			System.out.println(m);
-		} // displayMember end
-	}
+		} 
+	} // displayMember end
 } // class end
