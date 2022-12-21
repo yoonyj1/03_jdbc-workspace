@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import static homework1219.common.JDBCTemplate.*;
 import homework1219.model.vo.Student;
 
 public class StudentDao {
@@ -20,56 +21,41 @@ public class StudentDao {
 	String sql = null;
 	
 	
-	public int insertMenu(Student s) {
-		
+	public int insertMenu(Connection conn, Student s) {
+
 		sql = "INSERT INTO TB_STUDENT2 VALUES(?, ?, ?, ?, ?, null, null, null)";
-				
+
 		try {
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-			
-			conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "WORKBOOK", "WORKBOOK");
-			
 			pstmt = conn.prepareStatement(sql);
-			
+
 			pstmt.setString(1, s.getStudentNo());
 			pstmt.setString(2, s.getDepartmentNo());
 			pstmt.setString(3, s.getStudentName());
 			pstmt.setString(4, s.getStudentSsn());
 			pstmt.setString(5, s.getStudentAddress());
-			
+
 			result = pstmt.executeUpdate();
-			
+
 			if (result > 0) {
 				conn.commit();
-			}else {
+			} else {
 				conn.rollback();
 			}
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			try {
-				pstmt.close();
-				conn.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+			close(pstmt);
 		}
-		
+
 		return result;
 	}
 	
-	public ArrayList<Student> selectMenu() {
+	public ArrayList<Student> selectMenu(Connection conn) {
 		ArrayList<Student> list = new ArrayList<Student>();
 		
 		sql = "SELECT * FROM TB_STUDENT2";
 		
 		try {
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-			
-			conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "WORKBOOK", "WORKBOOK");
-			
 			pstmt = conn.prepareStatement(sql);
 			
 			rset = pstmt.executeQuery();
@@ -87,28 +73,18 @@ public class StudentDao {
 						));
 			}
 			
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			try {
-				rset.close();
-				pstmt.close();
-				conn.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+			close(rset);
+			close(pstmt);
+			close(conn);
 		}
 		return list;
 	}
 	
-	public int updateMenu(int menu, Student s) {
+	public int updateMenu(Connection conn, int menu, Student s) {
 		try {
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-			
-			conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "WORKBOOK", "WORKBOOK");
-			
 			pstmt = conn.prepareStatement(sql);
 			
 			if (menu == 1) {
@@ -128,30 +104,19 @@ public class StudentDao {
 			} else {
 				conn.rollback();
 			}
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			try {
-				pstmt.close();
-				conn.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+			close(pstmt);
 		}
 		
 		return result;
 	}
 	
-	public int deleteMenu(String studentName) {
+	public int deleteMenu(Connection conn, String studentName) {
 		sql = "DELETE FROM TB_STUDENT2 WHERE STUDENT_NAME = ?";
 		
 		try {
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-			
-			conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "WORKBOOK", "WORKBOOK");
-			
 			pstmt = conn.prepareStatement(sql);
 			
 			pstmt.setString(1, studentName);
@@ -163,17 +128,10 @@ public class StudentDao {
 			}else {
 				conn.rollback();
 			}
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			try {
-				pstmt.close();
-				conn.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+			close(pstmt);
 		}
 		
 		return result;

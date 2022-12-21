@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import homework1219.model.dao.StudentDao;
 import homework1219.model.vo.Student;
+import homework1219.service.StudentService;
 import homework1219.view.StudentMenu;
 
 public class StudentController {
@@ -12,18 +13,17 @@ public class StudentController {
 	
 	public void insertMenu(Student s) {
 		
-		result = new StudentDao().insertMenu(s);
+		result = new StudentService().insertMenu(s);
 		
 		if (result > 0) {
 			new StudentMenu().displaySuccess("추가 성공");
 		} else {
 			new StudentMenu().displayFail("추가 실패, 값을 확인하세요");
-			
 		}
 	}
 	
 	public void selectMenu() {
-		ArrayList<Student> list = new StudentDao().selectMenu();
+		ArrayList<Student> list = new StudentService().selectMenu();
 		
 		if(list.isEmpty()) {
 			new StudentMenu().displayNoData("조회 결과 없음");
@@ -38,11 +38,11 @@ public class StudentController {
 		if (menu == 1) {
 			s.setStudentName(studentName);
 			s.setDepartmentNo(info);
-			result = new StudentDao().updateMenu(menu, s);
+			result = new StudentService().updateMenu(menu, s);
 		} else if (menu == 2) {
 			s.setStudentName(studentName);
 			s.setStudentAddress(info);
-			result = new StudentDao().updateMenu(menu, s);
+			result = new StudentService().updateMenu(menu, s);
 		}
 		
 	
@@ -54,7 +54,7 @@ public class StudentController {
 	}
 	
 	public void deleteMenu(String studentName) {
-		result = new StudentDao().deleteMenu(studentName);
+		result = new StudentService().deleteMenu(studentName);
 		
 		if (result > 0) {
 			new StudentMenu().displaySuccess("삭제 성공");

@@ -8,30 +8,23 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import static com.kh.common.JDBCTemplate.*;
 import com.kh.model.vo.Member;
 
 public class MemberDao {
-	
-	/**
-	 * 회원 추가하는 메소드
-	 * @param m: 
-	 * @return: 처리된 행 수 
-	 */
-	public int insertMember(Member m) {
+
+	public int insertMember(Connection conn, Member m) {
+		// insert => 처리된 행 수 => 트랜잭션 처리
 		int result = 0;
-
-		Connection conn = null;
+		
 		PreparedStatement pstmt = null;
-
+		
 		String sql = "INSERT INTO MEMBER VALUES(SEQ_USERNO.NEXTVAL, ?, ?, ?, ?, ?, ?, ?, ?, ?, SYSDATE)";
-
+		
 		try {
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-
-			conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "JDBC", "JDBC");
-
-			pstmt = conn.prepareStatement(sql); // 생성과 동시에 SQL문 넘겨줌
-
+			// 3) PreparedStatement 객체 생성
+			pstmt = conn.prepareStatement(sql);
+			
 			pstmt.setString(1, m.getUserId());
 			pstmt.setString(2, m.getUserPwd());
 			pstmt.setString(3, m.getUserName());
@@ -41,213 +34,165 @@ public class MemberDao {
 			pstmt.setString(7, m.getPhone());
 			pstmt.setString(8, m.getAddress());
 			pstmt.setString(9, m.getHobby());
-
-			result = pstmt.executeUpdate(); // 여기서는 SQL문 전달하지 않고 그냥 실행 => 이미 pstmt에 SQL문 들어가 있음
-
-			// 여기서 SQLException 날 수도 있기 때문에 뒤에 커밋, 롤백 있으면 실행이 안됨
-			// 문제가 생길 시 무조건 롤백을 해야함
-
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
+			
+			// 4)5) SQL문 실행 & 결과받기
+			result = pstmt.executeUpdate();
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
-		} 
-		// 원래는 이렇게 돼야함
-		if (result > 0) {
-			try {
-				conn.commit();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		} else {
-			try {
-				conn.rollback();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-		
-		// 여기서 반납
-		try {
-			if(pstmt != null && !pstmt.isClosed()) {
-				pstmt.close();
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		
-		try {
-			if(conn != null && !conn.isClosed()) {
-				conn.close();
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
+		} finally {
+			close(pstmt);
+			// conn은 아직 반납하면 안됨 => 트랜잭션 처리 때 필요함
 		}
 		
 		return result;
 	} // insertMember end
 	
-	public ArrayList<Member> selectList() {
+	public int deleteMember(Connection conn, String userId) {
+		int result = 0;
 		
-		ArrayList<Member> list = new ArrayList<Member>(); // 텅빈 리스트
-		
-		Connection conn = null;
 		PreparedStatement pstmt = null;
-		ResultSet rset = null;
 		
-		String sql = "SELECT * FROM MEMBER ORDER BY USERNO";
+		String sql = "DELETE FROM MEMBER WHERE USERID = ?";
 		
 		try {
-			Class.forName("oracle.jdbc.driver.OracleDriver");
+			pstmt = conn.prepareStatement(sql);
 			
-			conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "JDBC", "JDBC");
-			pstmt = conn.prepareStatement(sql); // 애초에 완성된 SQL문 담았음
-			rset = pstmt.executeQuery();
+			pstmt.setString(1, userId);
 			
-			while (rset.next()) {
-				list.add(new Member(rset.getInt("USERNO"), 
-									rset.getString("USERID"), 
-									rset.getString("USERPWD"), 
-									rset.getString("USERNAME"), 
-									rset.getString("GENDER"), 
-									rset.getInt("AGE"), 
-									rset.getString("EMAIL"), 
-									rset.getString("PHONE"),
-									rset.getString("ADDRESS"),
-									rset.getString("HOBBY"), 
-									rset.getDate("ENROLLDATE")
-									));
-						
-			}
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
+			result = pstmt.executeUpdate();
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			try {
-				rset.close();
-				pstmt.close();
-				conn.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+			close(pstmt);
 		}
-		return list;
-	} // selectList end
+		return result;
+	} // deleteMember end
 	
-	public Member selectByUserId(String userId) {
-		Member m = null;
+	public ArrayList<Member> selectList(Connection conn) {
+		ArrayList<Member> list = new ArrayList<Member>();
 		
-		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
+		
+		String sql = "SELECT * FROM MEMBER ORDER BY USERNAME";
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			
+			rset = pstmt.executeQuery();
+			
+			while (rset.next()) {
+				list.add(new Member(
+									rset.getInt("USERNO"),
+									rset.getString("USERID"),
+									rset.getString("USERPWD"),
+									rset.getString("USERNAME"),
+									rset.getString("GENDER"),
+									rset.getInt("AGE"),
+									rset.getString("EMAIL"),
+									rset.getString("PHONE"),
+									rset.getString("ADDRESS"),
+									rset.getString("HOBBY"),
+									rset.getDate("ENROLLDATE")
+									));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			close(rset);
+			close(pstmt);
+		}
+		
+		return list;
+	}
+	
+	public Member selectByUserId (Connection conn, String userId) {
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		
+		Member m = null;
 		
 		String sql = "SELECT * FROM MEMBER WHERE USERID = ?";
 		
 		try {
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-			
-			conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "JDBC", "JDBC");
 			pstmt = conn.prepareStatement(sql);
 			
 			pstmt.setString(1, userId);
 			
 			rset = pstmt.executeQuery();
 			
-			if(rset.next()) {
+			if (rset.next()) {
 				m = new Member(rset.getInt("USERNO"),
-							   rset.getString("USERID"), 
-							   rset.getString("USERPWD"),
-							   rset.getString("USERNAME"),
-							   rset.getString("gender"),
-							   rset.getInt("age"), 
-							   rset.getString("email"),
-							   rset.getString("phone"),
-							   rset.getString("ADDRESS"),
-							   rset.getString("HOBBY"),
-							   rset.getDate("ENROLLDATE"));
+									  rset.getString("USERID"),
+									  rset.getString("userPwd"),
+									  rset.getString("userName"),
+									  rset.getString("gender"),
+									  rset.getInt("age"),
+									  rset.getString("email"),
+									  rset.getString("phone"),
+									  rset.getString("address"),
+									  rset.getString("hobby"),
+									  rset.getDate("enrollDate"));
 			}
-	
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			try {
-				rset.close();
-				pstmt.close();
-				conn.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-			
+			close(rset);
+			close(pstmt);
+			close(conn);
 		}
+		
 		return m;
-	} // selectByUserID end
+	}
 	
-	public ArrayList<Member> selectByUserName(String keyword) {
+	public ArrayList<Member> selectByUserName(Connection conn, String keyword) {
 		ArrayList<Member> list = new ArrayList<Member>();
 		
-		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
 		
 		String sql = "SELECT * FROM MEMBER WHERE USERNAME LIKE ?";
 		
 		try {
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-			
-			conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "JDBC", "JDBC");
-			
 			pstmt = conn.prepareStatement(sql);
+			
 			pstmt.setString(1, "%" + keyword + "%");
 			
 			rset = pstmt.executeQuery();
 			
-			while (rset.next()) {
-				list.add(new Member(rset.getInt("USERNO"), 
-						rset.getString("USERID"), 
-						rset.getString("USERPWD"), 
-						rset.getString("USERNAME"), 
-						rset.getString("GENDER"), 
-						rset.getInt("AGE"), 
-						rset.getString("EMAIL"), 
-						rset.getString("PHONE"),
-						rset.getString("ADDRESS"),
-						rset.getString("HOBBY"), 
-						rset.getDate("ENROLLDATE")
-						));
+			while(rset.next()) {
+				list.add(new Member(rset.getInt("USERNO"),
+									  rset.getString("USERID"),
+									  rset.getString("userPwd"),
+									  rset.getString("userName"),
+									  rset.getString("gender"),
+									  rset.getInt("age"),
+									  rset.getString("email"),
+									  rset.getString("phone"),
+									  rset.getString("address"),
+									  rset.getString("hobby"),
+									  rset.getDate("enrollDate")));
 			}
-			
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			try {
-				rset.close();
-				pstmt.close();
-				conn.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-			
+			close(rset);
+			close(pstmt);
 		}
+		
 		return list;
-	} // selectByUserName end
+	}
 	
-	public int updateMember(String userId, String userPwd, String email, String phone, String address) {
+	public int updateMember(Connection conn, String userId, String userPwd, String email, String phone, String address) {
 		int result = 0;
 		
-		Connection conn = null;
 		PreparedStatement pstmt = null;
 		
 		String sql = "UPDATE MEMBER SET USERPWD = ?, EMAIL = ?, PHONE = ?, ADDRESS = ? WHERE USERID = ?";
 		
 		try {
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-			
-			conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "JDBC", "JDBC");
 			pstmt = conn.prepareStatement(sql);
 			
 			pstmt.setString(1, userPwd);
@@ -257,81 +202,24 @@ public class MemberDao {
 			pstmt.setString(5, userId);
 			
 			result = pstmt.executeUpdate();
-			
-			if (result > 0) {
-				conn.commit();
-			} else {
-				conn.rollback();
-			}
-			
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			try {
-				pstmt.close();
-				conn.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-		return result;
-	} // updateMember end
-	
-	public int deleteMember(String userId) {
-		int result = 0;
-		
-		Connection conn = null;
-		PreparedStatement pstmt = null;
-		
-		String sql = "DELETE FROM MEMBER WHERE USERID = ?";
-		
-		try {
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-			
-			conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "JDBC", "JDBC");
-			pstmt = conn.prepareStatement(sql);
-			
-			pstmt.setString(1, userId);
-			
-			result = pstmt.executeUpdate();
-			
-			if (result > 0) {
-				conn.commit();
-			} else {
-				conn.rollback();
-			}
-		
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				pstmt.close();
-				conn.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+			close(pstmt);
 		}
 		
 		return result;
-	} // deleteMember end
+	}
 	
-	public ArrayList<Member> selectNameInfo(String userName) {
+	public ArrayList<Member> selectNameInfo(Connection conn, String userName){
 		ArrayList<Member> list = new ArrayList<Member>();
 		
-		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
 		
 		String sql = "SELECT * FROM MEMBER WHERE USERNAME = ?";
 		
 		try {
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-			
-			conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "JDBC", "JDBC");
 			pstmt = conn.prepareStatement(sql);
 			
 			pstmt.setString(1, userName);
@@ -339,37 +227,29 @@ public class MemberDao {
 			rset = pstmt.executeQuery();
 			
 			while (rset.next()) {
-				list.add(new Member(rset.getInt("USERNO"), 
-						rset.getString("USERID"), 
-						rset.getString("USERPWD"), 
-						rset.getString("USERNAME"), 
-						rset.getString("GENDER"), 
-						rset.getInt("AGE"), 
-						rset.getString("EMAIL"), 
-						rset.getString("PHONE"),
-						rset.getString("ADDRESS"),
-						rset.getString("HOBBY"), 
-						rset.getDate("ENROLLDATE")
-						));
+				list.add(new Member(rset.getInt("USERNO"),
+						  rset.getString("USERID"),
+						  rset.getString("userPwd"),
+						  rset.getString("userName"),
+						  rset.getString("gender"),
+						  rset.getInt("age"),
+						  rset.getString("email"),
+						  rset.getString("phone"),
+						  rset.getString("address"),
+						  rset.getString("hobby"),
+						  rset.getDate("enrollDate")));
 			}
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			try {
-				rset.close();
-				pstmt.close();
-				conn.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+			close(rset);
+			close(pstmt);
 		}
+		
 		return list;
 	}
 	
-	public int login(String adminId, String adminPwd) {
-		Connection conn = null;
+	public int login(Connection conn, String adminId, String adminPwd) {
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
 		
@@ -378,9 +258,6 @@ public class MemberDao {
 		String sql = "SELECT * FROM MEMBER WHERE USERID = ? AND USERPWD = ?";
 		
 		try {
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-			
-			conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "JDBC", "JDBC");
 			pstmt = conn.prepareStatement(sql);
 			
 			pstmt.setString(1, adminId);
@@ -394,12 +271,13 @@ public class MemberDao {
 				result = 2;
 			}
 
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} finally {
+			close(rset);
+			close(pstmt);
 		}
 		
 		return result;
-	} // login end
+	}
 } // class end

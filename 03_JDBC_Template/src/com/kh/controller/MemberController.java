@@ -3,6 +3,7 @@ package com.kh.controller;
 import java.util.ArrayList;
 
 import com.kh.model.dao.MemberDao;
+import com.kh.model.service.MemberService;
 import com.kh.model.vo.Member;
 import com.kh.view.MemberMenu;
 
@@ -20,12 +21,13 @@ public class MemberController {
 	 */
 	public void insertMember(String userId, String userPwd, String userName, String gender, String age, String email,
 			String phone, String address, String hobby) {
+
 		Member m = new Member(userId, userPwd, userName, gender, Integer.parseInt(age), email, phone, address, hobby);
 		
-		int result = new MemberDao().insertMember(m);
+		int result = new MemberService().insertMember(m);
 		
 		if (result > 0) {
-			new MemberMenu().displaySuccess("회원 추가 완료");
+			new MemberMenu().displaySuccess("회원 추가 성공");
 		} else {
 			new MemberMenu().displayFail("회원 추가 실패");
 		}
@@ -33,24 +35,24 @@ public class MemberController {
 	
 	
 	public void selectList() {
-		ArrayList<Member> list = new MemberDao().selectList();
+		ArrayList<Member> list = new MemberService().selectList();
 		
 		if (list.isEmpty()) {
-			new MemberMenu().displayNoData("조회 결과 없음");
+			new MemberMenu().displayNoData("조회된 데이터가 없음");
 		} else {
 			new MemberMenu().displayMemberList(list);
 		}
-		
 	} // selectList end
 	
 	public void selectByUserId(String userId) {
-		Member m = new MemberDao().selectByUserId(userId);
+		Member m = new MemberService().selectByUserId(userId);
 		
 		if (m == null) {
-			new MemberMenu().displayFail("조회 결과 없음");
+			new MemberMenu().displayNoData("조회된 데이터가 없음");
 		} else {
 			new MemberMenu().displayMember(m);
 		}
+		
 	} // selectByUserId end
 	
 	/**
@@ -58,14 +60,13 @@ public class MemberController {
 	 * @param keyword: 사용자에게 입력받은 키워드
 	 */
 	public void selectByUserName(String keyword) {
-		ArrayList<Member> list = new MemberDao().selectByUserName(keyword);
+		ArrayList<Member> list = new MemberService().selectByUserName(keyword);
 		
 		if (list.isEmpty()) {
-			new MemberMenu().displayFail("조회 결과 없음");
+			new MemberMenu().displayNoData(keyword + "에 해당된 결과 없음");
 		} else {
 			new MemberMenu().displayMemberList(list);
 		}
-	
 	}
 	
 	/**
@@ -77,12 +78,12 @@ public class MemberController {
 	 * @param address: 변경할 주소
 	 */
 	public void updateMember(String userId, String userPwd, String email, String phone, String address) {
-		int result = new MemberDao().updateMember(userId, userPwd, email, phone, address);
+		int result = new MemberService().updateMember(userId, userPwd, email, phone, address);
 		
 		if (result > 0) {
-			new MemberMenu().displaySuccess("변경 완료");
+			new MemberMenu().displaySuccess("수정 성공");
 		} else {
-			new MemberMenu().displayFail("변경 실패");
+			new MemberMenu().displayFail("수정 실패");
 		}
 	}
 	
@@ -92,10 +93,10 @@ public class MemberController {
 	 */
 	public void deleteMember(String userId) {
 
-		int result = new MemberDao().deleteMember(userId);
+		int result = new MemberService().deleteMember(userId);
 		
 		if (result > 0) {
-			new MemberMenu().displaySuccess("삭제 완료");
+			new MemberMenu().displaySuccess("삭제 성공");
 		} else {
 			new MemberMenu().displayFail("삭제 실패");
 		}
@@ -106,18 +107,18 @@ public class MemberController {
 	 * @param userName
 	 */
 	public void selectNameInfo(String userName) {
-		ArrayList<Member> list = new MemberDao().selectNameInfo(userName);
+		ArrayList<Member> list = new MemberService().selectNameInfo(userName);
 		
 		if (list.isEmpty()) {
-			new MemberMenu().displayFail("조회 결과 없음");
+			new MemberMenu().displayNoData("조회 결과 없음");
 		} else {
 			new MemberMenu().displayMemberList(list);
 		}
-	
+		
 	} // selectNameInfo end
 	
 	public boolean login(String adminId, String adminPwd) {
-		int result = new MemberDao().login(adminId, adminPwd);
+		int result = new MemberService().login(adminId, adminPwd);
 		boolean loginResult = true;
 		
 		if (result == 1) {
