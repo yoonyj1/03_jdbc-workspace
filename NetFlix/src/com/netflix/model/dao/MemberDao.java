@@ -1,13 +1,12 @@
 package com.netflix.model.dao;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 
+import static com.netflix.common.JDBCTemplate.*;
 import com.netflix.model.vo.Member;
 
 public class MemberDao {
@@ -27,12 +26,8 @@ public class MemberDao {
 	 * @param m
 	 * @return
 	 */
-	public int dml(String type, Member m) {
+	public int dml(Connection conn, String type, Member m) {
 			try {
-				Class.forName("oracle.jdbc.driver.OracleDriver");
-
-				conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "JDBC", "JDBC");
-
 				if (type.equals("추가")) {
 					sql = "INSERT INTO MEMBER2 VALUES(?, ?, ?, ?, ?)";
 					
@@ -59,37 +54,21 @@ public class MemberDao {
 					pstmt.setString(1, m.getMemId());
 				}
 				result = pstmt.executeUpdate();
-
-				if (result > 0) {
-					conn.commit();
-				} else {
-					conn.rollback();
-				}
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
+				
 			} catch (SQLException e) {
 				e.printStackTrace();
 			} finally {
-				try {
-					pstmt.close();
-					conn.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
+				close(pstmt);
 			}
 			return result;
 		} 
 
-	public ArrayList<Member> selectMenu() {
+	public ArrayList<Member> selectMenu(Connection conn) {
 		ArrayList<Member> list = new ArrayList<>();
 
 		sql = "SELECT * FROM MEMBER2 ORDER BY DECODE(GRADE, 'Basic', 1, 'Stand', 2, 'Premium', 3)";
 
 		try {
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-
-			conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "JDBC", "JDBC");
-
 			pstmt = conn.prepareStatement(sql);
 
 			rset = pstmt.executeQuery();
@@ -106,31 +85,21 @@ public class MemberDao {
 				
 			}
 
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			try {
-				rset.close();
-				pstmt.close();
-				conn.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-
+			close(rset);
+			close(pstmt);
+			close(conn);
 		}
 		return list;
 	} // selectMenu end
 
-	public ArrayList<Member> selectMenu(int menu, String info) {
+	public ArrayList<Member> selectMenu(Connection conn, int menu, String info) {
 		ArrayList<Member> list = new ArrayList<>();
 
 
 		try {
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-
-			conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "JDBC", "JDBC");
 
 			if (menu == 1) {
 				sql = "SELECT * FROM MEMBER2 WHERE MEMID = ?";
@@ -162,19 +131,12 @@ public class MemberDao {
 				list.add(m);
 			}
 
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			try {
-				rset.close();
-				pstmt.close();
-				conn.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-
+			close(rset);
+			close(pstmt);
+			close(conn);
 		}
 		return list;
 	} // selectMenu end

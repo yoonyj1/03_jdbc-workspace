@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import com.netflix.model.dao.MemberDao;
 import com.netflix.model.vo.Member;
+import com.netflix.service.MemberService;
 import com.netflix.view.MemberMenu;
 
 public class MemberController {
@@ -50,13 +51,13 @@ public class MemberController {
 		
 		if (menu == 1) {
 			m.setGrade("Basic");
-			result = new MemberDao().dml(type, m);
+			result = new MemberService().dml(type, m);
 		} else if (menu == 2) {
 			m.setGrade("Stand");
-			result = new MemberDao().dml(type, m);
+			result = new MemberService().dml(type, m);
 		} else if (menu == 3) {
 			m.setGrade("Premium");
-			result = new MemberDao().dml(type, m);
+			result = new MemberService().dml(type, m);
 		}
 		
 		dml(type);
@@ -69,7 +70,7 @@ public class MemberController {
 	public void selectMenu() {
 		dml = false;
 		
-		ArrayList<Member> list = new MemberDao().selectMenu();
+		ArrayList<Member> list = new MemberService().selectMenu();
 		
 		if(list.isEmpty()) {
 			new MemberMenu().displayNoData("조회결과 없음");
@@ -87,7 +88,7 @@ public class MemberController {
 	public void selectInfo(int menu, String info) {
 		dml = false;
 		
-		ArrayList<Member> list = new MemberDao().selectMenu(menu, info);
+		ArrayList<Member> list = new MemberService().selectMenu(menu, info);
 		
 		if(list.isEmpty()) {
 			new MemberMenu().displayNoData("조회결과 없음");
@@ -108,7 +109,7 @@ public class MemberController {
 		
 		Member m = new Member(memId, nickname, Integer.parseInt(point));
 		
-		result = new MemberDao().dml(type, m);
+		result = new MemberService().dml(type, m);
 		
 		dml(type);
 	} // updateMenu end
@@ -123,7 +124,7 @@ public class MemberController {
 		
 		Member m = new Member(memId);
 		
-		result = new MemberDao().dml(type, m);
+		result = new MemberService().dml(type, m);
 		
 		dml(type);
 	} // deleteMenu end
