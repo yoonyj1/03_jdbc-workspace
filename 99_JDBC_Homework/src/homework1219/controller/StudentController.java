@@ -33,14 +33,14 @@ public class StudentController {
 		
 	}
 	
-	public void updateMenu(int menu, String studentName , String info) {
+	public void updateMenu(int menu, String studentNo , String info) {
 		Student s = new Student();
 		if (menu == 1) {
-			s.setStudentName(studentName);
+			s.setStudentNo(studentNo);
 			s.setDepartmentNo(info);
 			result = new StudentService().updateMenu(menu, s);
 		} else if (menu == 2) {
-			s.setStudentName(studentName);
+			s.setStudentNo(studentNo);
 			s.setStudentAddress(info);
 			result = new StudentService().updateMenu(menu, s);
 		}
@@ -53,8 +53,8 @@ public class StudentController {
 		}
 	}
 	
-	public void deleteMenu(String studentName) {
-		result = new StudentService().deleteMenu(studentName);
+	public void deleteMenu(String studentNo) {
+		result = new StudentService().deleteMenu(studentNo);
 		
 		if (result > 0) {
 			new StudentMenu().displaySuccess("삭제 성공");

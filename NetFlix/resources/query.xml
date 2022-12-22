@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+
+<entry key="dmlInsert">
+	INSERT 
+		INTO MEMBER2 
+					(
+						MEMID
+					  , GRADE
+					  , NICKNAME
+					  , SIGNUP_DATE
+					  , POINT
+					)
+			VALUES(?, ?, ?, ?, ?)
+</entry>
+
+<entry key="dmlUpdate">
+	UPDATE 
+		MEMBER2 
+	   SET NICKNAME = ? 
+	  		, POINT = ? 
+	WHERE MEMID = ?
+</entry>
+
+<entry key="dmlDelete">
+	DELETE 
+	  FROM MEMBER2 
+	 WHERE MEMID = ?
+</entry>
+
+<entry key="selectMenu">
+	SELECT 
+			MEMID
+		  , GRADE
+		  , NICKNAME
+		  , SIGNUP_DATE
+		  , POINT
+  	  FROM MEMBER2 
+ 	 ORDER BY DECODE(GRADE, 'Basic', 1, 'Stand', 2, 'Premium', 3)
+</entry>
+
+<entry key="selectMenu1">
+	SELECT 
+			MEMID
+		  , GRADE
+		  , NICKNAME
+		  , SIGNUP_DATE
+		  , POINT
+  	  FROM MEMBER2 
+  	 WHERE MEMID = ?
+</entry>
+
+<entry key="selectMenu2">
+	SELECT 
+			MEMID
+		  , GRADE
+		  , NICKNAME
+		  , SIGNUP_DATE
+		  , POINT
+  	  FROM MEMBER2 
+  	 WHERE NICKNAME = ?
+</entry>
+
+</properties>

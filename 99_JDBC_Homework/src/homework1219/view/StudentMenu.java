@@ -40,8 +40,8 @@ public class StudentMenu {
 				break;
 				
 			case 4: // 학생 정보 삭제
-				String studentName = deleteMenu();
-				scon.deleteMenu(studentName);
+				String studentNo = deleteMenu();
+				scon.deleteMenu(studentNo);
 				break;
 				
 			case 0:
@@ -75,8 +75,8 @@ public class StudentMenu {
 	}
 	
 	public void updateMenu() {
-		System.out.print("수정할 학생의 이름: ");
-		String studentName = sc.nextLine();
+		System.out.print("수정할 학생의 학번: ");
+		String studentNo = sc.nextLine();
 		
 		System.out.println("수정할 항목");
 		System.out.println("1. 과번호");
@@ -89,13 +89,13 @@ public class StudentMenu {
 		case 1:
 			System.out.print("과번호: ");
 			String departmentNo = sc.nextLine();
-			scon.updateMenu(menu, studentName, departmentNo);
+			scon.updateMenu(menu, studentNo, departmentNo);
 			return;
 			
 		case 2:
 			System.out.print("주소: ");
 			String studentAddress = sc.nextLine();
-			scon.updateMenu(menu, studentName, studentAddress);
+			scon.updateMenu(menu, studentNo, studentAddress);
 			return;
 
 		default:
@@ -106,7 +106,7 @@ public class StudentMenu {
 	}
 	
 	public String deleteMenu() {
-		System.out.print("삭제할 학생의 이름: ");
+		System.out.print("삭제할 학생의 학번: ");
 		return sc.nextLine();
 	}
 	

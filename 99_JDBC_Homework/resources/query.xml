@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<entry key="insertMenu">
+	INSERT
+		 INTO TB_STUDENT2
+		 			(
+		 				STUDENT_NO
+		 			  , DEPARTMENT_NO
+		 			  , STUDENT_NAME
+		 			  , STUDENT_SSN
+		 			  , STUDENT_ADDRESS
+		 			  , ENTRANCE_DATE
+		 			  , ABSENCE_YN
+		 			  , COACH_PROFESSOR_NO
+		 			)
+		  VALUES
+		  		    (
+		  		     	?
+		  		   	  , ?
+		  		   	  , ?
+		  		   	  , ?
+		  		   	  , ?
+		  		   	  , null
+		  		   	  , null
+		  		   	  , null
+		  		   	  )
+</entry>
+
+<entry key="selectMenu">
+	SELECT 
+			STUDENT_NO
+		  , DEPARTMENT_NO
+		  , STUDENT_NAME
+		  , STUDENT_SSN
+		  , STUDENT_ADDRESS
+		  , ENTRANCE_DATE
+		  , ABSENCE_YN
+		  , COACH_PROFESSOR_NO 
+  	  FROM TB_STUDENT2
+</entry>
+
+
+<entry key="updateMenu1">
+	UPDATE 
+		TB_STUDENT2 
+	SET DEPARTMENT_NO = ? 
+	WHERE STUDENT_NO = ?
+</entry>
+
+<entry key="updateMenu2">
+	UPDATE 
+		TB_STUDENT2 
+	SET STUDENT_ADDRESS = ? 
+	WHERE STUDENT_NO = ?
+</entry>
+
+<entry key="deleteMenu">
+	DELETE 
+		FROM TB_STUDENT2 
+	WHERE STUDENT_NO = ?
+</entry>
+</properties>

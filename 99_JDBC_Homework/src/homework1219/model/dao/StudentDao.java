@@ -1,5 +1,7 @@
 package homework1219.model.dao;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -7,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Properties;
 
 import static homework1219.common.JDBCTemplate.*;
 import homework1219.model.vo.Student;
@@ -18,12 +21,20 @@ public class StudentDao {
 	PreparedStatement pstmt = null;
 	ResultSet rset = null;
 	
-	String sql = null;
 	
+	private Properties prop = new Properties();
+	
+	public StudentDao() {
+		try {
+			prop.loadFromXML(new FileInputStream("resources/query.xml"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	public int insertMenu(Connection conn, Student s) {
 
-		sql = "INSERT INTO TB_STUDENT2 VALUES(?, ?, ?, ?, ?, null, null, null)";
+		String sql = prop.getProperty("insertMenu");
 
 		try {
 			pstmt = conn.prepareStatement(sql);
@@ -36,11 +47,6 @@ public class StudentDao {
 
 			result = pstmt.executeUpdate();
 
-			if (result > 0) {
-				conn.commit();
-			} else {
-				conn.rollback();
-			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -53,7 +59,7 @@ public class StudentDao {
 	public ArrayList<Student> selectMenu(Connection conn) {
 		ArrayList<Student> list = new ArrayList<Student>();
 		
-		sql = "SELECT * FROM TB_STUDENT2";
+		String sql = prop.getProperty("selectMenu");
 		
 		try {
 			pstmt = conn.prepareStatement(sql);
@@ -85,16 +91,21 @@ public class StudentDao {
 	
 	public int updateMenu(Connection conn, int menu, Student s) {
 		try {
-			pstmt = conn.prepareStatement(sql);
 			
 			if (menu == 1) {
-				sql = "UPDATE TB_STUDENT2 SET DEPARTMENT_NO = ? WHERE STUDENT_NAME = ?";
+				String sql = prop.getProperty("updateMenu1");
+				
+				pstmt = conn.prepareStatement(sql);
+				
 				pstmt.setString(1, s.getDepartmentNo());
-				pstmt.setString(2, s.getStudentName());
+				pstmt.setString(2, s.getStudentNo());
 			} else if (menu == 2) {
-				sql = "UPDATE TB_STUDENT2 SET STUDENT_ADDRESS = ? WHERE STUDENT_NAME = ?";
+				String sql = prop.getProperty("updateMenu2");
+				
+				pstmt = conn.prepareStatement(sql);
+				
 				pstmt.setString(1, s.getStudentAddress());
-				pstmt.setString(2, s.getStudentName());
+				pstmt.setString(2, s.getStudentNo());
 			} 
 			
 			result = pstmt.executeUpdate();
@@ -113,13 +124,13 @@ public class StudentDao {
 		return result;
 	}
 	
-	public int deleteMenu(Connection conn, String studentName) {
-		sql = "DELETE FROM TB_STUDENT2 WHERE STUDENT_NAME = ?";
+	public int deleteMenu(Connection conn, String studentNo) {
+		String sql = prop.getProperty("deleteMenu");
 		
 		try {
 			pstmt = conn.prepareStatement(sql);
 			
-			pstmt.setString(1, studentName);
+			pstmt.setString(1, studentNo);
 			
 			result = pstmt.executeUpdate();
 			

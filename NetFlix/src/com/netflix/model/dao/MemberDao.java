@@ -1,10 +1,13 @@
 package com.netflix.model.dao;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Properties;
 
 import static com.netflix.common.JDBCTemplate.*;
 import com.netflix.model.vo.Member;
@@ -19,6 +22,17 @@ public class MemberDao {
 	ResultSet rset = null;
 
 	int result = 0;
+	
+	
+	private Properties prop = new Properties();
+	
+	public MemberDao () {
+		try {
+			prop.loadFromXML(new FileInputStream("resources/query.xml"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
 	/**
 	 * DML문을 처리하는 메소드
@@ -29,7 +43,7 @@ public class MemberDao {
 	public int dml(Connection conn, String type, Member m) {
 			try {
 				if (type.equals("추가")) {
-					sql = "INSERT INTO MEMBER2 VALUES(?, ?, ?, ?, ?)";
+					sql = prop.getProperty("dmlInsert");
 					
 					pstmt = conn.prepareStatement(sql);
 					
@@ -39,7 +53,7 @@ public class MemberDao {
 					pstmt.setDate(4, m.getSignUpDate());
 					pstmt.setInt(5, m.getPoint());
 				} else if (type.equals("수정")) {
-					sql = "UPDATE MEMBER2 SET NICKNAME = ? , POINT = ? WHERE MEMID = ?";
+					sql = prop.getProperty("dmlUpdate");
 					
 					pstmt = conn.prepareStatement(sql);
 					
@@ -47,7 +61,7 @@ public class MemberDao {
 					pstmt.setInt(2, m.getPoint());
 					pstmt.setString(3, m.getMemId());
 				} else if (type.equals("삭제")) {
-					sql = "DELETE FROM MEMBER2 WHERE MEMID = ?";
+					sql = prop.getProperty("dmlDelete");
 					
 					pstmt = conn.prepareStatement(sql);
 					
@@ -66,7 +80,7 @@ public class MemberDao {
 	public ArrayList<Member> selectMenu(Connection conn) {
 		ArrayList<Member> list = new ArrayList<>();
 
-		sql = "SELECT * FROM MEMBER2 ORDER BY DECODE(GRADE, 'Basic', 1, 'Stand', 2, 'Premium', 3)";
+		sql = prop.getProperty("selectMenu");
 
 		try {
 			pstmt = conn.prepareStatement(sql);
@@ -102,13 +116,13 @@ public class MemberDao {
 		try {
 
 			if (menu == 1) {
-				sql = "SELECT * FROM MEMBER2 WHERE MEMID = ?";
+				sql = prop.getProperty("selectMenu1");
 				
 				pstmt = conn.prepareStatement(sql);
 				
 				pstmt.setString(1, info);
 			} else if (menu == 2) {
-				sql = "SELECT * FROM MEMBER2 WHERE NICKNAME = ?";
+				sql = prop.getProperty("selectMenu2");
 				
 				pstmt = conn.prepareStatement(sql);
 

@@ -47,10 +47,10 @@ public class StudentService {
 		return result;
 	}
 	
-	public int deleteMenu(String studentName) {
+	public int deleteMenu(String studentNo) {
 		Connection conn = getConnection();
 		
-		int result = new StudentDao().deleteMenu(conn, studentName);
+		int result = new StudentDao().deleteMenu(conn, studentNo);
 		
 		if (result > 0) {
 			commit(conn);
