@@ -56,12 +56,10 @@ public class ProductMenu {
 	} // mainMenu end
 	
 	public void insertProduct() {
-		System.out.print("추가할 상품 아이디: ");
-		String productId = sc.nextLine();
+		String productId = inputId("추가할");
 		
 		
-		System.out.print("추가할 상품명: ");
-		String pName = sc.nextLine();
+		String pName = inputpName("추가할");
 		
 		System.out.print("가격: ");
 		int price = sc.nextInt();
@@ -82,8 +80,7 @@ public class ProductMenu {
 	public void updateProduct() {
 		pc.selectProduct();
 		
-		System.out.print("수정할 상품 아이디: ");
-		String productId = sc.nextLine();
+		String productId = inputId("수정할");
 		
 		System.out.println("=== 바꿀 항목 ===");
 		System.out.println("1. 가격");
@@ -124,15 +121,13 @@ public class ProductMenu {
 	public void deleteProduct() {
 		pc.selectProduct();
 		
-		System.out.print("삭제할 상품 ID: ");
-		String productId = sc.nextLine();
+		String productId = inputId("삭제할");
 		
 		pc.deleteProduct(productId);
 	}
 	
 	public void selectByProductName() {
-		System.out.print("검색할 상품명(키워드): ");
-		String keyword = sc.nextLine();
+		String keyword = inputpName("검색할");
 		
 		pc.selectByProductName(keyword);
 	}
@@ -158,5 +153,18 @@ public class ProductMenu {
 		System.out.println("\n처리 결과 : " + message);
 	}
 	
+	public String inputId(String type) {
+		System.out.println(type + "상품 아이디: ");
+		String productId = sc.nextLine();
+		
+		return productId;
+	}
+	
+	public String inputpName(String type) {
+		System.out.println(type + "상품명: ");
+		String pName = sc.nextLine();
+		
+		return pName;
+	}
 	
 } // class end
