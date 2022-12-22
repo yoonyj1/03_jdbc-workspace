@@ -103,7 +103,7 @@ public class ProductMenu {
 			return;
 			
 		case 2:
-			System.out.println("상품상세정보 입력: ");
+			System.out.print("상품상세정보 입력: ");
 			String updateDes = sc.nextLine();
 			pc.updateProduct(productId, updateDes);
 			return;
