@@ -108,4 +108,14 @@ public class MemberService {
 		
 		return result;
 	}
+	
+	public String loginMember(String userId, String userPwd) {
+		Connection conn = getConnection();
+		
+		String userName = new MemberDao().loginMember(conn, userId, userPwd);
+		
+		close(conn);
+		
+		return userName;
+	}
 }

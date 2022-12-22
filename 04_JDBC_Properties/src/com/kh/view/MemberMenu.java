@@ -37,6 +37,7 @@ public class MemberMenu {
 				System.out.println("│   4. 회원 이름으로 키워드 검색   	│");
 				System.out.println("│   5. 회원 정보 변경      		│");
 				System.out.println("│   6. 회원탈퇴      		│");
+				System.out.println("│   7. 로그인       		│");
 				System.out.println("│   9. 이름으로 정보 조회    		│");
 				System.out.println("│   0. 프로그램 종료     	  	│");
 				System.out.println("└───────────────────────────────┘");
@@ -67,6 +68,10 @@ public class MemberMenu {
 
 				case 6:
 					mc.deleteMember(inputMemberId());
+					break;
+					
+				case 7:
+					loginMember();
 					break;
 
 				case 9:
@@ -167,6 +172,20 @@ public class MemberMenu {
 		String address = sc.nextLine();
 		
 		mc.updateMember(userId, userPwd, email, phone, address);
+	}
+	
+	/**
+	 * 로그인 요청하는 화면
+	 */
+	public void loginMember() {
+		System.out.println("\n ===== 로그인 ======");
+		
+		String userId = inputMemberId();
+		
+		System.out.print("비밀번호 입력: ");
+		String userPwd = sc.nextLine();
+		
+		mc.loginMember(userId, userPwd);
 	}
 	
 	/**

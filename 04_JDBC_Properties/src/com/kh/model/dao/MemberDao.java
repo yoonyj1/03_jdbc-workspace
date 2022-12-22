@@ -3,11 +3,9 @@ package com.kh.model.dao;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Properties;
 
@@ -273,6 +271,37 @@ public class MemberDao {
 		}
 		
 		return list;
+	}
+	
+	public String loginMember(Connection conn, String userId, String userPwd) {
+		// SELECT문 => 한 행 조회 ResultSet => String 변수 => 컬럼 하나만 뽑으면 됨
+		
+		String userName = null;
+		
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		
+		String sql = prop.getProperty("loginMember");
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, userId);
+			pstmt.setString(2, userPwd);
+			
+			rset = pstmt.executeQuery();
+			
+			if(rset.next()) {
+				userName = rset.getString("USERNAME");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			close(rset);
+			close(pstmt);
+		}
+		
+		return userName;
 	}
 	
 	public int login(Connection conn, String adminId, String adminPwd) {

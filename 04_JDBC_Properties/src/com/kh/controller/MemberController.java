@@ -1,8 +1,10 @@
 package com.kh.controller;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Properties;
 
-import com.kh.model.dao.MemberDao;
 import com.kh.model.service.MemberService;
 import com.kh.model.vo.Member;
 import com.kh.view.MemberMenu;
@@ -102,6 +104,16 @@ public class MemberController {
 		}
 	}
 	
+	public void loginMember(String userId, String userPwd) {
+		String userName = new MemberService().loginMember(userId, userPwd);
+		
+		if (userName == null) {
+			new MemberMenu().displayFail("로그인 실패");
+		} else {
+			new MemberMenu().displaySuccess("로그인 성공 " + userName + "님 환영합니다.");
+		}
+	}
+	
 	/**
 	 * 이름으로 회원 정보를 조회요청을 처리해주는 메소드
 	 * @param userName
@@ -121,13 +133,22 @@ public class MemberController {
 		int result = new MemberService().login(adminId, adminPwd);
 		boolean loginResult = true;
 		
+		Properties prop = new Properties();
+		
+		try {
+			prop.load(new FileInputStream("resources/driver.properties"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	
+		
 		if (result == 1) {
 			new MemberMenu().displaySuccess("로그인 성공");
 			loginResult = true;
 		} else if (result == 2) {
-			if (!adminId.equals("admin")) {
+			if (!adminId.equals(prop.getProperty("admin"))) {
 				new MemberMenu().displayFail("로그인 실패, 아이디를 확인하세요");
-			} else if (!adminPwd.equals("1234")){
+			} else if (!adminPwd.equals(prop.getProperty("adminPwd"))){
 				new MemberMenu().displayFail("로그인 실패, 비밀번호를 확인하세요");
 			} 
 			loginResult = false;
